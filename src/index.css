@@ -19,9 +19,21 @@ body {
   align-items: center;
   min-width: 320px;
   min-height: 100vh;
+
+  overflow-y: scroll; /* TODO: костыль, чтоб не скакало */
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  margin: 0.25rem;
+}
+
+th, td {
+  padding: 0.5rem 1rem;
+  margin: 0.25rem;
 }

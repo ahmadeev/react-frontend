@@ -1,10 +1,10 @@
 import Navbar from "../components/Navbar/Navbar.jsx";
 import styles from "../page-styles/Home.module.css";
 import {useEffect, useState} from "react";
-import DataTable from "../components/DataTable.jsx";
+import DataTable from "../components/Table/DataTable.jsx";
 import Modal from "../components/Modal/Modal.jsx";
 import {crudCreate, crudRead, crudUpdate, crudDelete, crudReadMany, crudDeleteMany} from "../utils/crud.js";
-import DragonTable from "../components/DragonTable.jsx";
+import DragonTable from "../components/Table/DragonTable.jsx";
 import CreateDragon from "../components/CreateDragon.jsx";
 import Alert from "../components/Alert/Alert.jsx";
 

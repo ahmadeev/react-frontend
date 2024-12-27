@@ -2,7 +2,7 @@ import {useAuth} from "../utils/AuthProvider.jsx";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 
-function SignInForm({ from, setIsSignedUpParentState, setAlertMessageParentState }) {
+function SignInForm({ from, setIsSignedUpParentState, setAlertMessageParentState, setAlertStatusParentState }) {
     const { signIn } = useAuth();
     const navigate = useNavigate();
 
@@ -89,6 +89,11 @@ function SignInForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                             } else {
                                 setResponseError(responseData.details);
                             }
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            setAlertMessageParentState(`Ошибка при попытке войти в аккаунт!\n\n(Error: ${error})`);
+                            setAlertStatusParentState((prev) => (!prev));
                         })
                 }}>Sign In
                 </button>

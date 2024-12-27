@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar/Navbar.jsx";
 import {useEffect} from "react";
-import AdminTable from "../components/AdminTable.jsx";
+import AdminTable from "../components/Table/AdminTable.jsx";
 
 import styles from "../page-styles/Admin.module.css";
 import {crudReadMany} from "../utils/crud.js";

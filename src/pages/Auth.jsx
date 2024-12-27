@@ -12,6 +12,7 @@ function Auth({ pageTitle, isSignedUp }) {
 
     const [alertActive, setAlertActive] = useState(false);
     const [alertMessage, setAlertMessage] = useState("");
+    const [alertStatus, setAlertStatus] = useState(false);
 
     const [from, setFrom] = useState(location.state?.from?.pathname || "/");
 
@@ -27,7 +28,7 @@ function Auth({ pageTitle, isSignedUp }) {
         if (alertMessage !== "") {
             showAlert();
         }
-    }, [alertMessage])
+    }, [alertMessage, alertStatus])
 
     return (
         <div className={styles.wrapper}>
@@ -38,11 +39,13 @@ function Auth({ pageTitle, isSignedUp }) {
                         from={from}
                         setIsSignedUpParentState={setIsSignedUpHook}
                         setAlertMessageParentState={setAlertMessage}
+                        setAlertStatusParentState={setAlertStatus}
                     />) :
                     (<SignUpForm
                         from={from}
                         setIsSignedUpParentState={setIsSignedUpHook}
                         setAlertMessageParentState={setAlertMessage}
+                        setAlertStatusParentState={setAlertStatus}
                     />)
             }
 

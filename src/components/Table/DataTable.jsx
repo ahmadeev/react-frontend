@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styles from "./Table.module.css";
 
 const DataTable = () => {
     const [data, setData] = useState([]);  // состояние для данных
@@ -19,6 +20,12 @@ const DataTable = () => {
 
         fetchData();
     }, []); // пустой массив зависимостей — значит, запрос выполняется только один раз при монтировании компонента
+
+    const DIV_STYLE = {
+        display: "flex",
+        justifyContent: "space-between",
+        gap: "0.5rem"
+    }
 
     return (
         <>

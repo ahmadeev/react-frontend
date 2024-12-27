@@ -60,3 +60,14 @@ export function crudDeleteMany(url) {
         }
     })
 }
+
+//--------------------ping
+
+export function ping(url) {
+    return fetch(`${url}/ping`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${sessionStorage.getItem('session-token')}`,
+        },
+    })
+}

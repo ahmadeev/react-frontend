@@ -2,7 +2,7 @@ import {useAuth} from "../utils/AuthProvider.jsx";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 
-function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState }) {
+function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState, setAlertStatusParentState }) {
     const { signUp } = useAuth();
 
     // ошибки, пришедшие в ответе с сервера
@@ -118,7 +118,11 @@ function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                                 setResponseError(responseData.details);
                             }
                         })
-                        .catch(error => console.error(error))
+                        .catch((error) => {
+                            console.error(error);
+                            setAlertMessageParentState(`Ошибка при попытке войти в аккаунт!\n(Error: ${error})`);
+                            setAlertStatusParentState((prev) => (!prev));
+                        })
                 }}>Sign Up
                 </button>
             </form>

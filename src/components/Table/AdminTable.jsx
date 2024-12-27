@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {crudDelete, crudUpdate} from "../utils/crud.js";
-import {useAuth} from "./utils/AuthProvider.jsx";
+import {crudDelete, crudUpdate} from "../../utils/crud.js";
+import {useAuth} from "../utils/AuthProvider.jsx";
+import styles from "./Table.module.css";
 
 const AdminTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
     const { logout } = useAuth();
@@ -69,6 +70,12 @@ const AdminTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
 
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/admin";
 
+    const DIV_STYLE = {
+        display: "flex",
+        justifyContent: "space-between",
+        gap: "0.5rem"
+    }
+
     return (
         <>
             <h1>Таблица данных</h1>
@@ -115,10 +122,20 @@ const AdminTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                 </tbody>
             </table>
 
-            <div>
-                <button id="decrease-page" onClick={() => handlePageChange(-1)} disabled={page === 0}>left</button>
+            <div style={DIV_STYLE}>
+                <button
+                    className={styles.turn_page}
+                    id="decrease-page"
+                    onClick={() => handlePageChange(-1)}
+                    disabled={page === 0}>left
+                </button>
                 <p>{page + 1}</p>
-                <button id="increase-page" onClick={() => handlePageChange(1)} disabled={data.length < 10}>right</button>
+                <button
+                    className={styles.turn_page}
+                    id="increase-page"
+                    onClick={() => handlePageChange(1)}
+                    disabled={data.length < 10}>right
+                </button>
             </div>
         </>
     );
