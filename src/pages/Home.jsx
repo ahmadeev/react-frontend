@@ -5,7 +5,7 @@ import DataTable from "../components/Table/DataTable.jsx";
 import Modal from "../components/Modal/Modal.jsx";
 import {crudCreate, crudRead, crudUpdate, crudDelete, crudReadMany, crudDeleteMany} from "../utils/crud.js";
 import DragonTable from "../components/Table/DragonTable.jsx";
-import CreateDragon from "../components/CreateDragon.jsx";
+import CreateDragon from "../components/CreateDragon/CreateDragon.jsx";
 import Alert from "../components/Alert/Alert.jsx";
 
 function Home({ pageTitle }) {

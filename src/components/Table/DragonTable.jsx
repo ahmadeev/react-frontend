@@ -129,43 +129,66 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                 <table border="1">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Coordinates</th>
-                        <th>Cave</th>
-                        <th>Killer</th>
-                        <th>Age</th>
-                        <th>Description</th>
-                        <th>Wingspan</th>
-                        <th>Character</th>
-                        <th>Head</th>
-                        <th>Edit</th>
-                        <th>Remove</th>
+                        <th rowSpan={2}>ID</th>
+                        <th rowSpan={2}>Name</th>
+                        <th colSpan={2}>Coordinates</th>
+                        <th colSpan={1}>Cave</th>
+                        <th colSpan={6}>Killer</th>
+                        <th rowSpan={2}>Age</th>
+                        <th rowSpan={2}>Description</th>
+                        <th rowSpan={2}>Wingspan</th>
+                        <th rowSpan={2}>Character</th>
+                        <th colSpan={2}>Head</th>
+                        <th rowSpan={2}>Edit</th>
+                        <th rowSpan={2}>Remove</th>
+                    </tr>
+                    <tr>
+                        <th>x</th>
+                        <th>y</th>
+
+                        <th>number of treasures</th>
+
+                        <th>name</th>
+                        <th>eye color</th>
+                        <th>hair color</th>
+                        <th>LOCATION</th>
+                        <th>birthday</th>
+                        <th>height</th>
+
+                        <th>eyes count</th>
+                        <th>tooth count</th>
                     </tr>
                     </thead>
                     <tbody>
                     {isLoading && (
                         <tr>
-                            <td colSpan="12" style={{textAlign: "center"}}>Загрузка данных...</td>
+                            <td colSpan="19" style={{textAlign: "center"}}>Загрузка данных...</td>
                         </tr>
                     )}
                     {!isLoading && (!data || !data.length) && (
                         <tr>
-                            <td colSpan="12" style={{textAlign: "center"}}>Данные отсутствуют</td>
+                            <td colSpan="19" style={{textAlign: "center"}}>Данные отсутствуют</td>
                         </tr>
                     )}
                     {data && data.map(item => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
                             <td>{item.name}</td>
-                            <td>{item.coordinates.toString()}</td>
-                            <td>{item.cave.toString()}</td>
-                            <td>{item.killer.toString()}</td>
+                            <td>{item.coordinates.x}</td>
+                            <td>{item.coordinates.y}</td>
+                            <td>{item.cave.numberOfTreasures}</td>
+                            <td>{item.killer.name}</td>
+                            <td>{item.killer.eyeColor}</td>
+                            <td>{item.killer.hairColor}</td>
+                            <td>{item.killer.location.toString()}</td>
+                            <td>{item.killer.birthday}</td>
+                            <td>{item.killer.height}</td>
                             <td>{item.age}</td>
                             <td>{item.description}</td>
                             <td>{item.wingspan}</td>
                             <td>{item.character}</td>
-                            <td>{item.head.toString()}</td>
+                            <td>{item.head.eyesCount}</td>
+                            <td>{item.head.toothCount}</td>
                             <td>
                                 <button onClick={() => {
                                     // crudUpdate(`${BASE_URL}/dragon`, id);
