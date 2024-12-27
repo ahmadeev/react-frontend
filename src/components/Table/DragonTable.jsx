@@ -129,45 +129,50 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                 <table border="1">
                     <thead>
                     <tr>
-                        <th rowSpan={2}>ID</th>
-                        <th rowSpan={2}>Name</th>
+                        <th rowSpan={3}>ID</th>
+                        <th rowSpan={3}>Name</th>
                         <th colSpan={2}>Coordinates</th>
                         <th colSpan={1}>Cave</th>
-                        <th colSpan={6}>Killer</th>
-                        <th rowSpan={2}>Age</th>
-                        <th rowSpan={2}>Description</th>
-                        <th rowSpan={2}>Wingspan</th>
-                        <th rowSpan={2}>Character</th>
+                        <th colSpan={8}>Killer</th>
+                        <th rowSpan={3}>Age</th>
+                        <th rowSpan={3}>Description</th>
+                        <th rowSpan={3}>Wingspan</th>
+                        <th rowSpan={3}>Character</th>
                         <th colSpan={2}>Head</th>
-                        <th rowSpan={2}>Edit</th>
-                        <th rowSpan={2}>Remove</th>
+                        <th rowSpan={3}>Edit</th>
+                        <th rowSpan={3}>Remove</th>
+                    </tr>
+                    <tr>
+                        <th rowSpan={2}>x</th>
+                        <th rowSpan={2}>y</th>
+
+                        <th rowSpan={2}>number of treasures</th>
+
+                        <th rowSpan={2}>name</th>
+                        <th rowSpan={2}>eye color</th>
+                        <th rowSpan={2}>hair color</th>
+                        <th colSpan={3}>LOCATION</th>
+                        <th rowSpan={2}>birthday</th>
+                        <th rowSpan={2}>height</th>
+
+                        <th rowSpan={2}>eyes count</th>
+                        <th rowSpan={2}>tooth count</th>
                     </tr>
                     <tr>
                         <th>x</th>
                         <th>y</th>
-
-                        <th>number of treasures</th>
-
-                        <th>name</th>
-                        <th>eye color</th>
-                        <th>hair color</th>
-                        <th>LOCATION</th>
-                        <th>birthday</th>
-                        <th>height</th>
-
-                        <th>eyes count</th>
-                        <th>tooth count</th>
+                        <th>z</th>
                     </tr>
                     </thead>
                     <tbody>
                     {isLoading && (
                         <tr>
-                            <td colSpan="19" style={{textAlign: "center"}}>Загрузка данных...</td>
+                            <td colSpan="21" style={{textAlign: "center"}}>Загрузка данных...</td>
                         </tr>
                     )}
                     {!isLoading && (!data || !data.length) && (
                         <tr>
-                            <td colSpan="19" style={{textAlign: "center"}}>Данные отсутствуют</td>
+                            <td colSpan="21" style={{textAlign: "center"}}>Данные отсутствуют</td>
                         </tr>
                     )}
                     {data && data.map(item => (
