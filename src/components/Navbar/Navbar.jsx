@@ -27,7 +27,7 @@ function Navbar() {
 
                 <div style={div_style}>
                     {
-                        (!isAuthenticated || sessionStorage.getItem("sessionToken") === null) &&
+                        (!isAuthenticated || sessionStorage.getItem("session-token") === null) &&
                         <button onClick={() => navigate("/auth")}>
                             Log In
                         </button>
@@ -36,7 +36,7 @@ function Navbar() {
                     }
 
                     {
-                        (isAuthenticated  && sessionStorage.getItem("sessionToken") !== null) &&
+                        (isAuthenticated && sessionStorage.getItem("session-token") !== null) &&
                         <>
                             <h3>{username}</h3>
                             <button onClick={() => {

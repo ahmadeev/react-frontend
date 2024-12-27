@@ -2,9 +2,8 @@ import {useAuth} from "../utils/AuthProvider.jsx";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 
-function SignUpForm({ from, isSignedUp, setIsSignedUp }) {
+function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState }) {
     const { signUp } = useAuth();
-    const navigate = useNavigate();
 
     // ошибки, пришедшие в ответе с сервера
     const [responseError, setResponseError] = useState("");
@@ -19,7 +18,6 @@ function SignUpForm({ from, isSignedUp, setIsSignedUp }) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
         const isUsernameValid = checkIsValidUsername(username);
@@ -54,10 +52,6 @@ function SignUpForm({ from, isSignedUp, setIsSignedUp }) {
         setConfirmPassword(e.target.value);
     };
 
-    const handleIsAdminPropertyChange = (e) => {
-        setIsAdmin(!isAdmin);
-    };
-
     const comparePasswords = (password1, password2) => {
         return password1 && password2 && password1 === password2
     };
@@ -74,14 +68,6 @@ function SignUpForm({ from, isSignedUp, setIsSignedUp }) {
                         type="text"
                     />
                 </label><br/>
-                <label>
-                    <input
-                        value={isAdmin}
-                        onChange={handleIsAdminPropertyChange}
-                        type="checkbox"
-                    />
-                    Администратор?<br/>
-                </label>
                 <label>
                     Введите пароль:<br/>
                     <input
@@ -107,7 +93,7 @@ function SignUpForm({ from, isSignedUp, setIsSignedUp }) {
 
                 {
                     invalidUsernameError &&
-                    <h5>Имя пользователя должно содержать минимум 4 символа!
+                    <h5>Имя пользователя должно содержать минимум 4 символа!<br/>
                         Имя пользователя может содержать строчные и заглавные символы латинского алфавита и цифры.</h5>
                 }
 
@@ -121,13 +107,13 @@ function SignUpForm({ from, isSignedUp, setIsSignedUp }) {
                     signUp(
                         username,
                         password,
-                        isAdmin
+                        false
                     )
                         .then(response => response.json())
                         .then(responseData => {
                             if (responseData.status === "SUCCESS") {
-                                console.log("адрес перед navigate", from)
-                                navigate("/auth", {replace: true});
+                                setAlertMessageParentState("Успешная регистрация!");
+                                setIsSignedUpParentState((prev) => (!prev));
                             } else {
                                 setResponseError(responseData.details);
                             }
@@ -138,8 +124,8 @@ function SignUpForm({ from, isSignedUp, setIsSignedUp }) {
             </form>
             <br/>
             <a onClick={() => {
-                setIsSignedUp(!isSignedUp);
-            }}>{isSignedUp ? "Sign Up" : "Sign In"}</a>
+                setIsSignedUpParentState((prev) => (!prev));
+            }}>Sign In</a>
         </div>
     )
 }
