@@ -151,7 +151,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                         <th rowSpan={2}>name</th>
                         <th rowSpan={2}>eye color</th>
                         <th rowSpan={2}>hair color</th>
-                        <th colSpan={3}>LOCATION</th>
+                        <th colSpan={3}>location</th>
                         <th rowSpan={2}>birthday</th>
                         <th rowSpan={2}>height</th>
 
@@ -185,8 +185,10 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                             <td>{item.killer.name}</td>
                             <td>{item.killer.eyeColor}</td>
                             <td>{item.killer.hairColor}</td>
-                            <td>{item.killer.location.toString()}</td>
-                            <td>{item.killer.birthday}</td>
+                            <td>{item.killer.location.x}</td>
+                            <td>{item.killer.location.y}</td>
+                            <td>{item.killer.location.z}</td>
+                            <td>{item.killer.birthday.join("-")}</td>
                             <td>{item.killer.height}</td>
                             <td>{item.age}</td>
                             <td>{item.description}</td>
