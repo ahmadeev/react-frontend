@@ -86,7 +86,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
-                // setReload(false);
+                setReload(false); // вероятно, при отключении этой штуки не будет работать обновление таблицы (при массовом добавлении точно)
                 setIsLoading(false);
             }
         };

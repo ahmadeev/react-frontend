@@ -69,7 +69,7 @@ export function crudDeleteMany(url) {
     })
 }
 
-//--------------------ping
+// -------------------- ping
 
 export function ping(url) {
     return fetch(`${url}/ping`, {

@@ -63,6 +63,8 @@ function CreateDragon() {
     const [killerExistence, setKillerExistence] = useState(false);
     const [headExistence, setHeadExistence] = useState(false);
 
+    const [editingAllowed, setEditingAllowed] = useState(false);
+
     return (
         <div className={styles.form_wrapper}>
             <form>
@@ -97,11 +99,13 @@ function CreateDragon() {
                             <>
                                 <div className={styles.form_group}>
                                     <label>Координаты: x:</label>
-                                    <input value={formData.coordinates.x || ""} name="coordinates.x" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.coordinates.x || ""} name="coordinates.x" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                                 <div className={styles.form_group}>
                                     <label>Координаты: y:</label>
-                                    <input value={formData.coordinates.y || ""} name="coordinates.y" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.coordinates.y || ""} name="coordinates.y" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                             </>
                         )
@@ -131,7 +135,8 @@ function CreateDragon() {
                         ) : (
                             <div className={styles.form_group}>
                                 <label>Количество сокровищ:</label>
-                                <input value={formData.cave.numberOfTreasures || ""} name="cave.numberOfTreasures" type="text" onChange={(e) => handleChange(e)}/>
+                                <input value={formData.cave.numberOfTreasures || ""} name="cave.numberOfTreasures"
+                                       type="text" onChange={(e) => handleChange(e)}/>
                             </div>
                         )
                     }
@@ -161,35 +166,43 @@ function CreateDragon() {
                             <>
                                 <div className={styles.form_group}>
                                     <label>Имя:</label>
-                                    <input value={formData.killer.name || ""} name="killer.name" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.killer.name || ""} name="killer.name" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                                 <div className={styles.form_group}>
                                     <label>Цвет глаз:</label>
-                                    <input value={formData.killer.eyeColor || ""} name="killer.eyeColor" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.killer.eyeColor || ""} name="killer.eyeColor" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                                 <div className={styles.form_group}>
                                     <label>Цвет волос:</label>
-                                    <input value={formData.killer.hairColor || ""} name="killer.hairColor" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.killer.hairColor || ""} name="killer.hairColor" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                                 <div className={styles.form_group}>
                                     <label>Координаты: x:</label>
-                                    <input value={formData.killer.location.x || ""} name="killer.location.x" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.killer.location.x || ""} name="killer.location.x" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                                 <div className={styles.form_group}>
                                     <label>Координаты: y:</label>
-                                    <input value={formData.killer.location.y || ""} name="killer.location.y" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.killer.location.y || ""} name="killer.location.y" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                                 <div className={styles.form_group}>
                                     <label>Координаты: z:</label>
-                                    <input value={formData.killer.location.z || ""} name="killer.location.z" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.killer.location.z || ""} name="killer.location.z" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                                 <div className={styles.form_group}>
                                     <label>День рождения:</label>
-                                    <input value={formData.killer.birthday || ""} name="killer.birthday" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.killer.birthday || ""} name="killer.birthday" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                                 <div className={styles.form_group}>
                                     <label>Рост:</label>
-                                    <input value={formData.killer.height || ""} name="killer.height" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.killer.height || ""} name="killer.height" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                             </>
                         )
@@ -206,15 +219,18 @@ function CreateDragon() {
                     </div>
                     <div className={styles.form_group}>
                         <label>Описание:</label>
-                        <input value={formData.description || ""} name="description" type="text" onChange={(e) => handleChange(e)}/>
+                        <input value={formData.description || ""} name="description" type="text"
+                               onChange={(e) => handleChange(e)}/>
                     </div>
                     <div className={styles.form_group}>
                         <label>Размах крыльев:</label>
-                        <input value={formData.wingspan || ""} name="wingspan" type="text" onChange={(e) => handleChange(e)}/>
+                        <input value={formData.wingspan || ""} name="wingspan" type="text"
+                               onChange={(e) => handleChange(e)}/>
                     </div>
                     <div className={styles.form_group}>
                         <label>Характер:</label>
-                        <input value={formData.character || ""} name="character" type="text" onChange={(e) => handleChange(e)}/>
+                        <input value={formData.character || ""} name="character" type="text"
+                               onChange={(e) => handleChange(e)}/>
                     </div>
                 </div>
 
@@ -242,15 +258,28 @@ function CreateDragon() {
                             <>
                                 <div className={styles.form_group}>
                                     <label>Количество глаз:</label>
-                                    <input value={formData.head.eyesCount || ""} name="head.eyesCount" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.head.eyesCount || ""} name="head.eyesCount" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                                 <div className={styles.form_group}>
                                     <label>Количество зубов:</label>
-                                    <input value={formData.head.toothCount || ""} name="head.toothCount" type="text" onChange={(e) => handleChange(e)}/>
+                                    <input value={formData.head.toothCount || ""} name="head.toothCount" type="text"
+                                           onChange={(e) => handleChange(e)}/>
                                 </div>
                             </>
                         )
                     }
+                </div>
+                <br/>
+
+                {/*------------*/}
+
+                <div className="form-section">
+                    <label>
+                        <input type="checkbox" value={editingAllowed}
+                               onClick={() => setEditingAllowed((prev) => (!prev))}/>
+                        Разрешить редактирование и удаление Администраторами?
+                    </label>
                 </div>
                 <br/>
 
