@@ -18,6 +18,10 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
 
     const [page, setPage] = useState(0);
     const [size, setSize] = useState(10);
+    const [filterValue, setFilterValue] = useState("");
+    const [filterCol, setFilterCol] = useState("");
+    const [sortBy, setSortBy] = useState("id");
+    const [sortDir, setSortDir] = useState("ASC");
 
     const [reload, setReload] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
@@ -25,6 +29,15 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
     const handlePageChange = (direction) => {
         setPage((prevPage) => prevPage + direction);
     };
+
+    // можно улучшить, сделав его универсальным для селектов
+    const handleSelectChange = (event, setFunction) => {
+        setFunction(event.target.value);
+    };
+
+    const handleFindEvent = () => {
+        setReload((prev) => !prev);
+    }
 
     const loadDataWrapper = async (func, args) => {
         try {
@@ -58,7 +71,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const response = await fetchData(readManyUrl, page, size); // асинхронно грузим страницу данных из БД
+                const response = await fetchData(readManyUrl, page, size, filterValue, filterCol, sortBy, sortDir); // асинхронно грузим страницу данных из БД
 
                 if (!response.ok) {
                     if (response.status === 401)  {
@@ -73,7 +86,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
-                setReload(false);
+                // setReload(false);
                 setIsLoading(false);
             }
         };
@@ -89,7 +102,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
     const cave = new DragonCaveDTO(15);
     const killer = new PersonDTO("killer", "WHITE", "WHITE", new LocationDTO(1, 1, 1), new Date().toISOString().split('T')[0], 200);
     const head = new DragonHeadDTO(200, 100500);
-    const dragon = new DragonDTO(
+    const dragon1 = new DragonDTO(
         "Fire Dragon",
         coordinates,
         cave,
@@ -101,16 +114,49 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
         head, // Dragon head
     );
 
+    const dragon2 = new DragonDTO(
+        "Air Dragon",
+        coordinates,
+        cave,
+        killer,
+        200,  // Age,
+        "A fierce and powerful dragon", // Description
+        1000,  // Wingspan
+        null, // No character
+        head, // Dragon head
+    );
+
     const DIV_STYLE = {
         display: "flex",
         justifyContent: "space-between",
         gap: "0.5rem"
     }
 
+    const columns = [
+        "Name",
+        "Coordinates: x",
+        "Coordinates: y",
+        "Cave: number of treasures",
+        "Killer: name",
+        "Killer: eye color",
+        "Killer: hair color",
+        "Killer: Location: x",
+        "Killer: Location: y",
+        "Killer: Location: z",
+        "Killer: birthday",
+        "Killer: height",
+        "Age",
+        "Description",
+        "Wingspan",
+        "Character",
+        "Head: eyes count",
+        "Head: tooth count"
+    ]
+
     return (
         <>
             <button onClick={() => {
-                loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, dragon]);
+                loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, Math.random() < 0.5 ? dragon1 : dragon2]);
             }}>CREATE
             </button>
 
@@ -120,6 +166,62 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
             </button>
 
             <h1>Таблица данных</h1>
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+            }}>
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                }}>
+                    <label>
+                        Filter by column
+                        <select value={filterCol} onChange={(event) => {
+                            handleSelectChange(event, setFilterCol);
+                        }}>
+                            <option value="" disabled>Select an option</option>
+                            {columns && columns.map((option, index) => (
+                                <option key={index} value={option}>
+                                    {option}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <label>
+                        <input value={filterValue} onChange={(e) => setFilterValue(e.target.value)} type="text" placeholder="key word"/>
+                    </label>
+                </div>
+
+                <div style={{
+                    display: "flex",
+                    flexDirection: "row",
+                }}>
+                    <label>
+                        Sort by column
+                        <select value={sortBy} onChange={(event) => {
+                            handleSelectChange(event, setSortBy);
+                        }}>
+                            <option value="id">id</option>
+                            {columns && columns.map((option, index) => (
+                                <option key={index} value={option}>
+                                    {option}
+                                </option>
+                            ))}
+                        </select>
+                    </label>
+                    <label>
+                        <button onClick={() => {
+                            if (sortDir === "ASC") {
+                                setSortDir("DESC");
+                            } else {
+                                setSortDir("ASC");
+                            }
+                        }}>{sortDir}</button>
+                    </label>
+                </div>
+                <button onClick={handleFindEvent}>Find</button>
+            </div>
+
             <div style={{
                 maxWidth: "100%",
                 display: "flex",
@@ -218,13 +320,17 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
             </div>
 
             <div style={DIV_STYLE}>
-                <button className={styles.turn_page} id="decrease-page" onClick={() => handlePageChange(-1)} disabled={page === 0}>left</button>
+                <button className={styles.turn_page} id="decrease-page" onClick={() => handlePageChange(-1)}
+                        disabled={page === 0}>left
+                </button>
                 <p>{page + 1}</p>
-                <button className={styles.turn_page} id="increase-page" onClick={() => handlePageChange(1)} disabled={data.length < 10}>right</button>
+                <button className={styles.turn_page} id="increase-page" onClick={() => handlePageChange(1)}
+                        disabled={data.length < 10}>right
+                </button>
             </div>
 
-            </>
-            );
-            };
+        </>
+    );
+};
 
-            export default DragonTable;
+export default DragonTable;
