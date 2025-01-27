@@ -126,12 +126,6 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
         head, // Dragon head
     );
 
-    const DIV_STYLE = {
-        display: "flex",
-        justifyContent: "space-between",
-        gap: "0.5rem"
-    }
-
     const columns = [
         "Name",
         "Coordinates: x",
@@ -166,16 +160,10 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
             </button>
 
             <h1>Таблица данных</h1>
-            <div style={{
-                display: "flex",
-                flexDirection: "column",
-            }}>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                }}>
+            <div className={styles.filter_block}>
+                <div className={styles.filter_block_section}>
                     <label>
-                        Filter by column
+                        Filter by column:
                         <select value={filterCol} onChange={(event) => {
                             handleSelectChange(event, setFilterCol);
                         }}>
@@ -192,12 +180,9 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                     </label>
                 </div>
 
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                }}>
+                <div className={styles.filter_block_section}>
                     <label>
-                        Sort by column
+                        Sort by column:
                         <select value={sortBy} onChange={(event) => {
                             handleSelectChange(event, setSortBy);
                         }}>
@@ -210,25 +195,14 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                         </select>
                     </label>
                     <label>
-                        <button onClick={() => {
-                            if (sortDir === "ASC") {
-                                setSortDir("DESC");
-                            } else {
-                                setSortDir("ASC");
-                            }
-                        }}>{sortDir}</button>
+                        <button onClick={() => setSortDir((prev) => (prev === "ASC" ? "DESC" : "ASC"))}>{sortDir}</button>
                     </label>
                 </div>
                 <button onClick={handleFindEvent}>Find</button>
             </div>
 
-            <div style={{
-                maxWidth: "100%",
-                display: "flex",
-                alignItems: "center",
-                overflowX: "auto"
-            }}>
-                <table border="1">
+            <div className={styles.table_wrapper}>
+                <table className={styles.data_table}>
                     <thead>
                     <tr>
                         <th rowSpan={3}>ID</th>
@@ -269,12 +243,12 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                     <tbody>
                     {isLoading && (
                         <tr>
-                            <td colSpan="21" style={{textAlign: "center"}}>Загрузка данных...</td>
+                            <td colSpan="21">Загрузка данных...</td>
                         </tr>
                     )}
                     {!isLoading && (!data || !data.length) && (
                         <tr>
-                            <td colSpan="21" style={{textAlign: "center"}}>Данные отсутствуют</td>
+                            <td colSpan="21">Данные отсутствуют</td>
                         </tr>
                     )}
                     {data && data.map(item => (
@@ -319,14 +293,16 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                 </table>
             </div>
 
-            <div style={DIV_STYLE}>
+            <div className={styles.button_block}>
+                <button disabled={true}>&lt;&lt;</button>
                 <button className={styles.turn_page} id="decrease-page" onClick={() => handlePageChange(-1)}
-                        disabled={page === 0}>left
+                        disabled={page === 0}>&lt;
                 </button>
                 <p>{page + 1}</p>
                 <button className={styles.turn_page} id="increase-page" onClick={() => handlePageChange(1)}
-                        disabled={data.length < 10}>right
+                        disabled={data.length < 10}>&gt;
                 </button>
+                <button disabled={true}>&gt;&gt;</button>
             </div>
 
         </>
