@@ -38,7 +38,7 @@ th, td {
   margin: 0.25rem;
 }
 
-input[type=text], input[type=password], select {
+input[type=text], input[type=password], input[type=date], select {
   padding: 0.5rem 1rem;
   margin: 0.25rem;
 }
