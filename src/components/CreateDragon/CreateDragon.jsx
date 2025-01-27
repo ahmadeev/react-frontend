@@ -1,7 +1,10 @@
 import styles from "./CreateDragon.module.css"
 import React, {useState} from "react";
+import {crudCreate} from "../../utils/crud.js";
 
-function CreateDragon() {
+function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadParentState }) {
+
+    const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
 
     const FORM_SECTION_STYLE = {
         display: "grid",
@@ -56,7 +59,7 @@ function CreateDragon() {
     const handleSubmit = (event) => {
         event.preventDefault();
         console.log("Submitted data:", formData);
-
+        loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, formData]);
     };
 
     const [coordinatesExistence, setCoordinatesExistence] = useState(false);

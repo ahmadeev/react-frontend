@@ -7,13 +7,18 @@ import {crudCreate, crudRead, crudUpdate, crudDelete, crudReadMany, crudDeleteMa
 import DragonTable from "../components/Table/DragonTable.jsx";
 import CreateDragon from "../components/CreateDragon/CreateDragon.jsx";
 import Alert from "../components/Alert/Alert.jsx";
+import {useAuth} from "../components/utils/AuthProvider.jsx";
 
 function Home({ pageTitle }) {
+
+    const { logout } = useAuth();
 
     const [modalActive, setModalActive] = useState(false);
     const [createDragonModalActive, setCreateDragonModalActive] = useState(false);
 
     const [alertActive, setAlertActive] = useState(false);
+
+    const [tableReload, setTableReload] = useState(false);
 
     const showAlert = () => {
         setAlertActive(true);
@@ -25,6 +30,35 @@ function Home({ pageTitle }) {
     })
 
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
+
+    const loadDataWrapper = async (func, args) => {
+        try {
+            const response = await func(...args);
+
+            if (!response.ok) {
+                if (response.status === 401)  {
+                    console.log("401 Error processing table refresh")
+                    logout();
+                }
+                throw new Error();
+            }
+
+            let responseData;
+            try {
+                responseData = await response.json();
+            } catch (error) {
+                console.error("Error reading response body", error);
+            }
+            console.log(responseData)
+            return responseData;
+            // раньше setReload(true) был тут
+        } catch (error) {
+            console.error("Error proccessing CRUD:", error);
+            return null;
+        } finally {
+            setTableReload((prev) => !prev);
+        }
+    }
 
     return (
         <>
@@ -42,11 +76,21 @@ function Home({ pageTitle }) {
                     fetchData={crudReadMany}
                     readManyUrl={`${BASE_URL}/dragons`}
                     deleteOneUrl={`${BASE_URL}/dragon`}
+
+                    loadDataWrapper={loadDataWrapper}
+
+                    tableReloadParentState={tableReload}
+                    setTableReloadParentState={setTableReload}
                 />
             </div>
 
             <Modal active={createDragonModalActive} setActive={setCreateDragonModalActive}>
-                <CreateDragon />
+                <CreateDragon
+                    loadDataWrapper={loadDataWrapper}
+
+                    tableReloadParentState={tableReload}
+                    setTableReloadParentState={setTableReload}
+                />
             </Modal>
 
             <Modal active={modalActive} setActive={setModalActive}>

@@ -11,7 +11,7 @@ import {
 import {useAuth} from "../utils/AuthProvider.jsx";
 import styles from "./Table.module.css";
 
-const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
+const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, tableReloadParentState, setTableReloadParentState }) => {
     const { logout } = useAuth();
 
     const [data, setData] = useState([]);
@@ -23,7 +23,6 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
     const [sortBy, setSortBy] = useState("id");
     const [sortDir, setSortDir] = useState("ASC");
 
-    const [reload, setReload] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
     const handlePageChange = (direction) => {
@@ -36,36 +35,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
     };
 
     const handleFindEvent = () => {
-        setReload((prev) => !prev);
-    }
-
-    const loadDataWrapper = async (func, args) => {
-        try {
-            const response = await func(...args);
-
-            if (!response.ok) {
-                if (response.status === 401)  {
-                    console.log("401 Error processing table refresh")
-                    logout();
-                }
-                throw new Error();
-            }
-
-            let responseData;
-            try {
-                responseData = await response.json();
-            } catch (error) {
-                console.error("Error reading response body", error);
-            }
-            console.log(responseData)
-            return responseData;
-            // раньше setReload(true) был тут
-        } catch (error) {
-            console.error("Error proccessing CRUD:", error);
-            return null;
-        } finally {
-            setReload(true);
-        }
+        setTableReloadParentState((prev) => !prev);
     }
 
     useEffect(() => {
@@ -86,14 +56,14 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
             } catch (error) {
                 console.error("Error fetching data:", error);
             } finally {
-                setReload(false); // вероятно, при отключении этой штуки не будет работать обновление таблицы (при массовом добавлении точно)
+                setTableReloadParentState(false); // вероятно, при отключении этой штуки не будет работать обновление таблицы (при массовом добавлении точно)
                 setIsLoading(false);
             }
         };
 
         loadData();
 
-    }, [fetchData, readManyUrl, page, size, reload]); // пустой -- один раз. data не добавляем, иначе луп
+    }, [fetchData, readManyUrl, page, size, tableReloadParentState]); // пустой -- один раз. data не добавляем, иначе луп
 
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
 
@@ -176,7 +146,8 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                         </select>
                     </label>
                     <label>
-                        <input value={filterValue} onChange={(e) => setFilterValue(e.target.value)} type="text" placeholder="key word"/>
+                        <input value={filterValue} onChange={(e) => setFilterValue(e.target.value)} type="text"
+                               placeholder="key word"/>
                     </label>
                 </div>
 
@@ -195,10 +166,12 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl }) => {
                         </select>
                     </label>
                     <label>
-                        <button onClick={() => setSortDir((prev) => (prev === "ASC" ? "DESC" : "ASC"))}>{sortDir}</button>
+                        <button
+                            onClick={() => setSortDir((prev) => (prev === "ASC" ? "DESC" : "ASC"))}>{sortDir}</button>
                     </label>
                 </div>
                 <button onClick={handleFindEvent}>Find</button>
+                <button>Reset</button>
             </div>
 
             <div className={styles.table_wrapper}>

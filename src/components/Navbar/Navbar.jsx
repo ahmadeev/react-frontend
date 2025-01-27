@@ -38,6 +38,27 @@ function Navbar() {
                     {
                         (isAuthenticated && sessionStorage.getItem("session-token") !== null) &&
                         <>
+                            <div
+                                style={{
+                                    width: "5vh",
+                                    height: "5vh",
+                                    position: "relative",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    overflow: "hidden",
+                                }}
+                            >
+                                {/* Outer circle */}
+                                <div
+                                    style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        borderRadius: "50%",
+                                        background: "#ccc",
+                                    }}
+                                ></div>
+                            </div>
                             <h3>{username}</h3>
                             <button onClick={() => {
                                 console.log(from)
