@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {crudCreate, crudDelete, crudDeleteMany, crudRead, crudReadMany, crudUpdate} from "../../utils/crud.js";
 import {
     CoordinatesDTO,
@@ -116,6 +116,32 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
         "Head: eyes count",
         "Head: tooth count"
     ]
+
+    const wsRef = useRef(null);
+
+    useEffect(() => {
+        wsRef.current = new WebSocket("ws://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/ws/dragons");
+
+        wsRef.current.onopen = () => {
+            console.log("[WS] Connection opened.")
+        };
+
+        wsRef.current.onmessage = (event) => {
+            console.log("[WS] Event: ", event.data);
+            setTableReloadParentState((prev) => !prev);
+        };
+
+        wsRef.current.onerror = (error) => {
+            console.log("[WS] Error: ", error);
+        };
+
+        return () => {
+            if (wsRef.current.current) {
+                wsRef.current.close();
+            }
+            console.log('[WS] Connection closed.');
+        };
+    }, []);
 
     return (
         <>

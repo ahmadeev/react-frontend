@@ -5,9 +5,14 @@ import App from './App.jsx'
 import {AuthProvider} from "./components/utils/AuthProvider.jsx";
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+    // вероятно, стрикт мод мешает вебсокетам (не было проверено)
+/*  <StrictMode>
       <AuthProvider>
           <App />
       </AuthProvider>
-  </StrictMode>,
+  </StrictMode>,*/
+
+    <AuthProvider>
+        <App />
+    </AuthProvider>
 )
