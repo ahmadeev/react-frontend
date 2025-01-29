@@ -40,7 +40,13 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
     }
 
     const handleResetEvent = () => {
-        return;
+        setPage(0);
+        setSize(10);
+        setFilterValue("");
+        setFilterCol("");
+        setSortBy("id");
+        setSortDir("ASC");
+        handleFindEvent();
     }
 
     useEffect(() => {
@@ -218,6 +224,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                     <thead>
                     <tr>
                         <th rowSpan={3}>ID</th>
+                        <th rowSpan={3}>Owner</th>
                         <th rowSpan={3}>Name</th>
                         <th colSpan={2}>Coordinates</th>
                         <th colSpan={1}>Cave</th>
@@ -267,6 +274,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                     {data && data.map(item => (
                         <tr key={item.id}>
                             <td>{item.id}</td>
+                            <td>{item.ownerId}</td>
                             <td>{item.name}</td>
                             <td>{item.coordinates.x}</td>
                             <td>{item.coordinates.y}</td>
@@ -289,6 +297,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                                 <button onClick={() => {
                                     // crudUpdate(`${BASE_URL}/dragon`, id);
                                     // setReload(true);
+                                    console.log(item);
                                 }}>
                                     /
                                 </button>

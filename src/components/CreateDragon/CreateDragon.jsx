@@ -13,25 +13,26 @@ function CreateDragon({ loadDataWrapper, loadDataWrapperWithoutReload, tableRelo
         alignItems: "center",
     }
 
+    // замена: null -> "" (повлечет ли за собой ошибки?)
     const [formData, setFormData] = useState({
-        name: null,
-        coordinates: { x: null, y: null },
-        cave: { numberOfTreasures: null },
+        name: "",
+        coordinates: { x: "", y: "" },
+        cave: { numberOfTreasures: "" },
         killer: {
-            name: null,
-            eyeColor: null,
-            hairColor: null,
-            location: { x: null, y: null, z: null },
-            birthday: null,
-            height: null,
+            name: "",
+            eyeColor: "",
+            hairColor: "",
+            location: { x: "", y: "", z: "" },
+            birthday: "",
+            height: "",
         },
-        age: null,
-        description: null,
-        wingspan: null,
-        character: null,
+        age: "",
+        description: "",
+        wingspan: "",
+        character: "",
         head: {
-            eyesCount: null,
-            toothCount: null,
+            eyesCount: "",
+            toothCount: "",
         }
     });
 
@@ -178,7 +179,7 @@ function CreateDragon({ loadDataWrapper, loadDataWrapperWithoutReload, tableRelo
                                 {/* ошибка */}
                                 <div className={styles.form_group}>
                                     {
-                                        coordinatesXTouched && (!(formData.coordinates.x).match(regexInt) || formData.coordinates.x <= -596) ?
+                                        coordinatesXTouched && !((formData.coordinates.x).match(regexInt) && formData.coordinates.x > -596) ?
                                             <span style={{color: "red"}}>Координата X должна быть представлена числом и быть больше -596!</span> : <></>
                                     }
                                 </div>
@@ -193,7 +194,7 @@ function CreateDragon({ loadDataWrapper, loadDataWrapperWithoutReload, tableRelo
                                 {/* ошибка */}
                                 <div className={styles.form_group}>
                                     {
-                                        coordinatesYTouched && (!(formData.coordinates.y).match(regexInt) && formData.coordinates.y !== "") ?
+                                        coordinatesYTouched && !(formData.coordinates.y === null || formData.coordinates.y === "" || (formData.coordinates.y).match(regexInt)) ?
                                             <span style={{color: "red"}}>Координата Y должна быть представлена числом или отсутствовать вовсе!</span> : <></>
                                     }
                                 </div>
