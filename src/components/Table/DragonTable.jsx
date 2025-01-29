@@ -12,6 +12,8 @@ import {useAuth} from "../utils/AuthProvider.jsx";
 import styles from "./Table.module.css";
 
 const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, tableReloadParentState, setTableReloadParentState }) => {
+    const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
+
     const { logout } = useAuth();
 
     const [data, setData] = useState([]);
@@ -29,13 +31,16 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
         setPage((prevPage) => prevPage + direction);
     };
 
-    // можно улучшить, сделав его универсальным для селектов
     const handleSelectChange = (event, setFunction) => {
         setFunction(event.target.value);
     };
 
     const handleFindEvent = () => {
         setTableReloadParentState((prev) => !prev);
+    }
+
+    const handleResetEvent = () => {
+        return;
     }
 
     useEffect(() => {
@@ -65,13 +70,12 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
 
     }, [fetchData, readManyUrl, page, size, tableReloadParentState]); // пустой -- один раз. data не добавляем, иначе луп
 
-    const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
-
     // Пример создания экземпляра
     const coordinates = new CoordinatesDTO(50, 30);
     const cave = new DragonCaveDTO(15);
     const killer = new PersonDTO("killer", "WHITE", "WHITE", new LocationDTO(1, 1, 1), new Date().toISOString().split('T')[0], 200);
     const head = new DragonHeadDTO(200, 100500);
+
     const dragon1 = new DragonDTO(
         "Fire Dragon",
         coordinates,
@@ -92,7 +96,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
         200,  // Age,
         "A fierce and powerful dragon", // Description
         1000,  // Wingspan
-        null, // No character
+        "CUNNING", // No character
         head, // Dragon head
     );
 
@@ -116,6 +120,8 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
         "Head: eyes count",
         "Head: tooth count"
     ]
+
+    // универсально, но надо передать url ws
 
     const wsRef = useRef(null);
 
@@ -143,6 +149,8 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
         };
     }, []);
 
+    // стоп
+
     return (
         <>
             <button onClick={() => {
@@ -156,6 +164,9 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
             </button>
 
             <h1>Таблица данных</h1>
+
+            {/* универсально, но нужно передать хуки состояния, columns и создать методы */}
+
             <div className={styles.filter_block}>
                 <div className={styles.filter_block_section}>
                     <label>
@@ -197,8 +208,10 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                     </label>
                 </div>
                 <button onClick={handleFindEvent}>Find</button>
-                <button>Reset</button>
+                <button onClick={handleResetEvent}>Reset</button>
             </div>
+
+            {/* стоп */}
 
             <div className={styles.table_wrapper}>
                 <table className={styles.data_table}>
@@ -240,6 +253,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                     </tr>
                     </thead>
                     <tbody>
+                    {/* вынести функцию loadDataWrapper и хуки состояния isLoading и data */}
                     {isLoading && (
                         <tr>
                             <td colSpan="21">Загрузка данных...</td>
@@ -292,6 +306,8 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                 </table>
             </div>
 
+            {/* универсально, но нужно передать хуки состояния и создать методы */}
+
             <div className={styles.button_block}>
                 <button disabled={true}>&lt;&lt;</button>
                 <button className={styles.turn_page} id="decrease-page" onClick={() => handlePageChange(-1)}
@@ -303,6 +319,14 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                 </button>
                 <button disabled={true}>&gt;&gt;</button>
             </div>
+
+            <div className={styles.button_block}>
+                <a onClick={() => setSize(10)}>10</a>
+                <a onClick={() => setSize(50)}>50</a>
+                <a onClick={() => setSize(100)}>100</a>
+            </div>
+
+            {/* стоп */}
 
         </>
     );

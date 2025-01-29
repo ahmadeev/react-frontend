@@ -1,8 +1,8 @@
 import styles from "./CreateDragon.module.css"
-import React, {useState} from "react";
-import {crudCreate} from "../../utils/crud.js";
+import React, {useEffect, useState} from "react";
+import {crudCreate, crudDeleteMany, crudRead, crudReadMany} from "../../utils/crud.js";
 
-function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadParentState }) {
+function CreateDragon({ loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) {
 
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
 
@@ -73,7 +73,6 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
     const [coordinatesXTouched, setCoordinatesXTouched] = useState(false);
     const [coordinatesYTouched, setCoordinatesYTouched] = useState(false);
     const [numberOfTreasuresTouched, setNumberOfTreasuresTouched] = useState(false);
-
     const [killerNameTouched, setKillerNameTouched] = useState(false);
     const [killerEyeColorTouched, setKillerEyeColorTouched] = useState(false);
     const [killerLocationXTouched, setKillerLocationXTouched] = useState(false);
@@ -83,7 +82,6 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
     const [killerHeightTouched, setKillerHeightTouched] = useState(false);
     const [dragonHeadEyesCountTouched, setDragonHeadEyesCountTouched] = useState(false);
     const [dragonHeadToothCountTouched, setDragonHeadToothCountTouched] = useState(false);
-
     const [dragonAgeTouched, setDragonAgeTouched] = useState(false);
     const [dragonWingspanTouched, setDragonWingspanTouched] = useState(false);
 
@@ -101,6 +99,26 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
 
     const regexInt = /^-?\d+$/; // +- int
     const regexFloat = /^-?\d+([.,]\d+)?$/; // +- float
+
+    const [coordinates, setCoordinates] = useState(null);
+    const [caves, setCaves] = useState(null);
+    const [persons, setPersons] = useState(null);
+    const [heads, setHeads] = useState(null);
+
+    useEffect(() => {
+        loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/coordinates`]).then(rd => {
+            setCoordinates(rd.data);
+        });
+        loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/caves`]).then(rd => {
+            setCaves(rd.data);
+        })
+        loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/persons`]).then(rd => {
+            setPersons(rd.data);
+        })
+        loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/heads`]).then(rd => {
+            setHeads(rd.data);
+        })
+    }, [tableReloadParentState]);
 
     return (
         <div className={styles.form_wrapper}>
@@ -138,8 +156,13 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
                         coordinatesExistence ? (
                             <>
                                 <select>
-                                    <option>meow</option>
-                                    <option>meow2</option>
+                                    <option value="" disabled>Выберите объект:</option>
+                                    {coordinates && coordinates.map((option, index) => (
+                                        <option key={index} value={option}>
+                                            {option}
+                                        </option>
+                                    ))}
+                                    {!coordinates && <option value="" disabled>&lt;пусто&gt;</option>}
                                 </select>
                             </>
                         ) : (
@@ -195,8 +218,13 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
                         caveExistence ? (
                             <>
                                 <select>
-                                    <option>meow</option>
-                                    <option>meow2</option>
+                                    <option value="" disabled>Выберите объект:</option>
+                                    {caves && caves.map((option, index) => (
+                                        <option key={index} value={option}>
+                                            {option}
+                                        </option>
+                                    ))}
+                                    {!caves && <option value="" disabled>&lt;пусто&gt;</option>}
                                 </select>
                             </>
                         ) : (
@@ -204,7 +232,8 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
                                 {/* инпут */}
                                 <div className={styles.form_group}>
                                     <label>Количество сокровищ:</label>
-                                    <input value={formData.cave.numberOfTreasures || ""} name="cave.numberOfTreasures" type="text"
+                                    <input value={formData.cave.numberOfTreasures || ""} name="cave.numberOfTreasures"
+                                           type="text"
                                            onChange={(e) => handleChange(e)}
                                            onBlur={() => setNumberOfTreasuresTouched(true)}
                                     />
@@ -237,8 +266,13 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
                         killerExistence ? (
                             <>
                                 <select>
-                                    <option>meow</option>
-                                    <option>meow2</option>
+                                    <option value="" disabled>Выберите объект:</option>
+                                    {persons && persons.map((option, index) => (
+                                        <option key={index} value={option}>
+                                            {option}
+                                        </option>
+                                    ))}
+                                    {!persons && <option value="" disabled>&lt;пусто&gt;</option>}
                                 </select>
                             </>
                         ) : (
@@ -247,7 +281,9 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
                                 <div className={styles.form_group}>
                                     <label>Имя:</label>
                                     <input value={formData.killer.name || ""} name="killer.name" type="text"
-                                           onChange={(e) => handleChange(e)}/>
+                                           onChange={(e) => handleChange(e)}
+                                           onBlur={() => setKillerNameTouched(true)}
+                                    />
                                 </div>
                                 {/* ошибка */}
                                 <div className={styles.form_group}>
@@ -259,7 +295,9 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
                                 <div className={styles.form_group}>
                                     <label>Цвет глаз:</label>
                                     <select value={formData.killer.eyeColor || ""} name="killer.eyeColor"
-                                            onChange={(e) => handleChange(e)}>
+                                            onChange={(e) => handleChange(e)}
+                                            onBlur={() => setKillerEyeColorTouched(true)}
+                                    >
                                         <option value="" disabled>Выберите цвет</option>
                                         {color && color.map((option, index) => (
                                             <option key={index} value={option}>
@@ -439,8 +477,13 @@ function CreateDragon({ loadDataWrapper, tableReloadParentState, setTableReloadP
                         headExistence ? (
                             <>
                                 <select>
-                                    <option>meow</option>
-                                    <option>meow2</option>
+                                    <option value="" disabled>Выберите объект:</option>
+                                    {heads && heads.map((option, index) => (
+                                        <option key={index} value={option}>
+                                            {option}
+                                        </option>
+                                    ))}
+                                    {!heads && <option value="" disabled>&lt;пусто&gt;</option>}
                                 </select>
                             </>
                         ) : (

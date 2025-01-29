@@ -49,6 +49,34 @@ function Home({ pageTitle }) {
         }
     }
 
+    // TODO: костыль
+    const loadDataWrapperWithoutReload = async (func, args) => {
+        try {
+            const response = await func(...args);
+
+            if (!response.ok) {
+                if (response.status === 401)  {
+                    console.log("401 Error processing table refresh")
+                    logout();
+                }
+                throw new Error();
+            }
+
+            let responseData;
+            try {
+                responseData = await response.json();
+            } catch (error) {
+                console.error("Error reading response body", error);
+            }
+            console.log(responseData)
+            return responseData;
+            // раньше setReload(true) был тут
+        } catch (error) {
+            console.error("Error proccessing CRUD:", error);
+            return null;
+        }
+    }
+
     return (
         <>
             <Navbar/>
@@ -74,6 +102,7 @@ function Home({ pageTitle }) {
             <Modal active={createDragonModalActive} setActive={setCreateDragonModalActive}>
                 <CreateDragon
                     loadDataWrapper={loadDataWrapper}
+                    loadDataWrapperWithoutReload={loadDataWrapperWithoutReload}
 
                     tableReloadParentState={tableReload}
                     setTableReloadParentState={setTableReload}
