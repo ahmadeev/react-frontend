@@ -1,6 +1,15 @@
 import styles from "./CreateDragon.module.css"
 import React, {useEffect, useState} from "react";
 import {crudCreate, crudDeleteMany, crudRead, crudReadMany} from "../../utils/crud.js";
+import FormTextInput from "./FormTextInput.jsx";
+import {
+    CoordinatesDTO,
+    DragonCaveDTO,
+    DragonDTO,
+    DragonHeadDTO,
+    LocationDTO,
+    PersonDTO
+} from "../../utils/object.model.js";
 
 function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) {
 
@@ -13,86 +22,63 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
         alignItems: "center",
     }
 
-    // замена: null -> "" (повлечет ли за собой ошибки?)
-    const [formData, setFormData] = useState({
-        name: "",
-        coordinates: { x: "", y: "" },
-        cave: { numberOfTreasures: "" },
-        killer: {
-            name: "",
-            eyeColor: "",
-            hairColor: "",
-            location: { x: "", y: "", z: "" },
-            birthday: "",
-            height: "",
-        },
-        age: "",
-        description: "",
-        wingspan: "",
-        character: "",
-        head: {
-            eyesCount: "",
-            toothCount: "",
-        }
-    });
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        console.log(name, value);
-        setFormData((prev) => {
-            const keys = name.split("."); // Разделяем имя по точке
-            let data = { ...prev };
-
-            let nested = data;
-            keys.forEach((key, index) => {
-                if (index === keys.length - 1) {
-                    nested[key] = value;
-                } else {
-                    if (!nested[key]) nested[key] = {};
-                    nested = nested[key];
-                }
-            });
-
-            return data;
-        });
-    };
-
     const handleSubmit = (event) => {
         event.preventDefault();
+
+        let formData = new DragonDTO(
+            dragonName,
+            new CoordinatesDTO(
+                coordinatesX,
+                coordinatesY
+            ),
+            new DragonCaveDTO(
+                dragonCaveNumberOfTreasures
+            ),
+            new PersonDTO(
+                personName,
+                personEyeColor,
+                personHairColor,
+                new LocationDTO(
+                    locationX,
+                    locationY,
+                    locationZ
+                ),
+                personBirthday,
+                personHeight
+            ),
+            dragonAge,
+            dragonDescription,
+            dragonWingspan,
+            dragonCharacter,
+            new DragonHeadDTO(
+                dragonHeadEyesCount,
+                dragonHeadToothCount
+            )
+        )
+
         console.log("Submitted data:", formData);
         loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, formData]);
     };
 
+    // чекбоксы на привязку существующего объекта (1)/(0) самостоятельное создание объекта
     const [coordinatesExistence, setCoordinatesExistence] = useState(false);
     const [caveExistence, setCaveExistence] = useState(false);
     const [killerExistence, setKillerExistence] = useState(false);
     const [headExistence, setHeadExistence] = useState(false);
 
+    // галочка для разрешения редактирования и удаления админами
     const [editingAllowed, setEditingAllowed] = useState(false);
 
-    const [dragonNameTouched, setDragonNameTouched] = useState(false);
-    const [coordinatesXTouched, setCoordinatesXTouched] = useState(false);
-    const [coordinatesYTouched, setCoordinatesYTouched] = useState(false);
-    const [numberOfTreasuresTouched, setNumberOfTreasuresTouched] = useState(false);
-    const [killerNameTouched, setKillerNameTouched] = useState(false);
+    // рудимент
     const [killerEyeColorTouched, setKillerEyeColorTouched] = useState(false);
-    const [killerLocationXTouched, setKillerLocationXTouched] = useState(false);
-    const [killerLocationYTouched, setKillerLocationYTouched] = useState(false);
-    const [killerLocationZTouched, setKillerLocationZTouched] = useState(false);
-    const [killerBirthdayTouched, setKillerBirthdayTouched] = useState(false);
-    const [killerHeightTouched, setKillerHeightTouched] = useState(false);
-    const [dragonHeadEyesCountTouched, setDragonHeadEyesCountTouched] = useState(false);
-    const [dragonHeadToothCountTouched, setDragonHeadToothCountTouched] = useState(false);
-    const [dragonAgeTouched, setDragonAgeTouched] = useState(false);
-    const [dragonWingspanTouched, setDragonWingspanTouched] = useState(false);
 
-    const dragonCharacter = [
+    const dragonCharacterList = [
         "CUNNING",
         "GOOD",
         "CHAOTIC_EVIL"
     ]
 
-    const color = [
+    const colorList = [
         "GREEN",
         "BLACK",
         "WHITE"
@@ -101,6 +87,7 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
     const regexInt = /^-?\d+$/; // +- int
     const regexFloat = /^-?\d+([.,]\d+)?$/; // +- float
 
+    // данные для селектов в форме (списки существующих объектов для привязки)
     const [coordinates, setCoordinates] = useState(null);
     const [caves, setCaves] = useState(null);
     const [persons, setPersons] = useState(null);
@@ -108,55 +95,149 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
 
     useEffect(() => {
         if (coordinatesExistence) {
-            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/coordinates`]).then(rd => {
-                setCoordinates(rd.data);
-            });
+            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/coordinates`])
+                .then(rd => {
+                    setCoordinates(rd.data);
+                })
         }
     }, [coordinatesExistence]);
 
     useEffect(() => {
         if (caveExistence) {
-            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/caves`]).then(rd => {
-                setCaves(rd.data);
-            })
+            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/caves`])
+                .then(rd => {
+                    setCaves(rd.data);
+                })
         }
     }, [caveExistence]);
 
     useEffect(() => {
         if (killerExistence) {
-            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/persons`]).then(rd => {
-                setPersons(rd.data);
-            })
+            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/persons`])
+                .then(rd => {
+                    setPersons(rd.data);
+                })
         }
     }, [killerExistence]);
 
     useEffect(() => {
         if (headExistence) {
-            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/heads`]).then(rd => {
-                setHeads(rd.data);
-            })
+            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/heads`])
+                .then(rd => {
+                    setHeads(rd.data);
+                })
         }
     }, [headExistence]);
+
+    // основы для полей ввода формы (передаются в FormTextInput и FormSelectInput)
+
+    const [dragonName, setDragonName] = useState("");
+    const isDragonNameValid = () => {
+        return dragonName !== null && dragonName !== "";
+    }
+
+    const [coordinatesX, setCoordinatesX] = useState("");
+    const isCoordinatesXValid = () => {
+        return coordinatesX.match(regexInt) && coordinatesX > -596;
+    }
+
+    const [coordinatesY, setCoordinatesY] = useState("");
+    const isCoordinatesYValid = () => {
+        return coordinatesY === null || coordinatesY === "" || coordinatesY.match(regexInt);
+    }
+
+    const [dragonCaveNumberOfTreasures, setDragonCaveNumberOfTreasures] = useState("");
+    const isDragonCaveNumberOfTreasuresValid = () => {
+        return dragonCaveNumberOfTreasures.match(regexFloat) && dragonCaveNumberOfTreasures > 0;
+    }
+
+    const [personName, setPersonName] = useState("");
+    const isPersonNameValid = () => {
+        return personName !== null && personName !== "";
+    }
+
+    const [personEyeColor, setPersonEyeColor] = useState("");
+    const isPersonEyeColorValid = () => {
+        return personEyeColor !== null && personEyeColor !== "";
+    }
+
+    const [personHairColor, setPersonHairColor] = useState("");
+    const isPersonHairColorValid = () => {
+        return true;
+    }
+
+    const [locationX, setLocationX] = useState("");
+    const isLocationXValid = () => {
+        return locationX.match(regexInt) || locationX === "";
+    }
+
+    const [locationY, setLocationY] = useState("");
+    const isLocationYValid = () => {
+        return locationY.match(regexInt) && locationY !== "";
+    }
+
+    const [locationZ, setLocationZ] = useState("");
+    const isLocationZValid = () => {
+        return locationZ.match(regexInt) || locationZ === "";
+    }
+
+    const [personBirthday, setPersonBirthday] = useState("");
+    const isPersonBirthdayValid = () => {
+        return personBirthday !== null && personBirthday !== "";
+    }
+
+    const [personHeight, setPersonHeight] = useState("");
+    const isPersonHeightValid = () => {
+        return personHeight.match(regexInt) && personHeight > 0;
+    }
+
+    const [dragonAge, setDragonAge] = useState("");
+    const isDragonAgeValid = () => {
+        return dragonAge.match(regexInt) && dragonAge > 0;
+    }
+
+    const [dragonDescription, setDragonDescription] = useState("");
+    const isDragonDescriptionValid = () => {
+        return true;
+    }
+
+    const [dragonWingspan, setDragonWingspan] = useState("");
+    const isDragonWingspanValid = () => {
+        return dragonWingspan.match(regexInt) && dragonWingspan > 0;
+    }
+
+    const [dragonCharacter, setDragonCharacter] = useState("");
+    const isDragonCharacterValid = () => {
+        return true;
+    }
+
+    const [dragonHeadEyesCount, setDragonHeadEyesCount] = useState("");
+    const isDragonHeadEyesCountValid = () => {
+        return dragonHeadEyesCount.match(regexFloat) || dragonHeadEyesCount === "";
+    }
+
+    const [dragonHeadToothCount, setDragonHeadToothCount] = useState("");
+    const isDragonHeadToothCountValid = () => {
+        return dragonHeadToothCount.match(regexFloat) && dragonHeadToothCount !== "";
+    }
+
+    const [coordinatesSelectState, setCoordinatesSelectState] = useState("");
+    const [dragonCaveSelectState, setDragonCaveSelectState] = useState("");
+    const [personSelectState, setPersonSelectState] = useState("");
+    const [dragonHeadSelectState, setDragonHeadSelectState] = useState("");
 
     return (
         <div className={styles.form_wrapper}>
             <form>
                 <h2>Информация о драконе</h2>
                 <div className="form-section">
-                    {/* инпут */}
-                    <div className={styles.form_group}>
-                        <label>Имя дракона:</label>
-                        <input value={formData.name || ""} name="name" type="text"
-                               onChange={(e) => handleChange(e)}
-                               onBlur={() => setDragonNameTouched(true)}
-                        />
-                    </div>
-                    {/* ошибка */}
-                    <div className={styles.form_group}>
-                        {
-                            dragonNameTouched && (formData.name === null || formData.name === "") ? <span style={{color: "red"}}>Имя дракона не может быть пустым!</span> : <></>
-                        }
-                    </div>
+                    <FormTextInput
+                        label="Имя дракона:"
+                        errorMessage="Значение поля 'Имя дракона' не может быть пустым!"
+                        value={dragonName}
+                        setValue={setDragonName}
+                        isValid={isDragonNameValid}
+                    />
                 </div>
 
                 {/*------------*/}
@@ -173,48 +254,40 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                     {
                         coordinatesExistence ? (
                             <>
-                                <select>
+                                <select
+                                    name="coordinates"
+                                    value={coordinatesSelectState}
+                                    onChange={(e) => {
+                                        setCoordinatesSelectState(e.target.value);
+                                        setCoordinatesX(JSON.parse(e.target.value).x);
+                                        setCoordinatesY(JSON.parse(e.target.value).y);
+                                    }}
+                                >
                                     <option value="" disabled>Выберите объект:</option>
-                                    {coordinates && coordinates.map((option, index) => (
+                                    {(coordinates && coordinates.length > 0) && coordinates.map((option, index) => (
                                         <option key={index} value={option}>
                                             {option}
                                         </option>
                                     ))}
-                                    {!coordinates && <option value="" disabled>&lt;пусто&gt;</option>}
+                                    {(!coordinates || coordinates.length === 0) && <option value="" disabled>&lt;пусто&gt;</option>}
                                 </select>
                             </>
                         ) : (
                             <>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Координаты: x:</label>
-                                    <input value={formData.coordinates.x || ""} name="coordinates.x" type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setCoordinatesXTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        coordinatesXTouched && !((formData.coordinates.x).match(regexInt) && formData.coordinates.x > -596) ?
-                                            <span style={{color: "red"}}>Координата X должна быть представлена числом и быть больше -596!</span> : <></>
-                                    }
-                                </div>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Координаты: y:</label>
-                                    <input value={formData.coordinates.y || ""} name="coordinates.y" type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setCoordinatesYTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        coordinatesYTouched && !(formData.coordinates.y === null || formData.coordinates.y === "" || (formData.coordinates.y).match(regexInt)) ?
-                                            <span style={{color: "red"}}>Координата Y должна быть представлена числом или отсутствовать вовсе!</span> : <></>
-                                    }
-                                </div>
+                                <FormTextInput
+                                    label="Координаты: x:"
+                                    errorMessage="Значение поля 'Координаты: x' должно быть представлено в виде числа и быть больше -596!"
+                                    value={coordinatesX}
+                                    setValue={setCoordinatesX}
+                                    isValid={isCoordinatesXValid}
+                                />
+                                <FormTextInput
+                                    label="Координаты: y:"
+                                    errorMessage="Значение поля 'Координаты: y' должно быть представлено в виде числа или отсутствовать вовсе!"
+                                    value={coordinatesY}
+                                    setValue={setCoordinatesY}
+                                    isValid={isCoordinatesYValid}
+                                />
                             </>
                         )
                     }
@@ -235,34 +308,32 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                     {
                         caveExistence ? (
                             <>
-                                <select>
+                                <select
+                                    value={dragonCaveSelectState}
+                                    onChange={(e) => {
+                                        setDragonCaveSelectState(e.target.value);
+                                        setDragonCaveNumberOfTreasures(JSON.parse(e.target.value).numberOfTreasures);
+                                    }}
+                                >
                                     <option value="" disabled>Выберите объект:</option>
-                                    {caves && caves.map((option, index) => (
+                                    {(caves && caves.length > 0) && caves.map((option, index) => (
                                         <option key={index} value={option}>
                                             {option}
                                         </option>
                                     ))}
-                                    {!caves && <option value="" disabled>&lt;пусто&gt;</option>}
+                                    {(!caves || caves.length === 0) &&
+                                        <option value="" disabled>&lt;пусто&gt;</option>}
                                 </select>
                             </>
                         ) : (
                             <>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Количество сокровищ:</label>
-                                    <input value={formData.cave.numberOfTreasures || ""} name="cave.numberOfTreasures"
-                                           type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setNumberOfTreasuresTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        numberOfTreasuresTouched && (!(formData.cave.numberOfTreasures).match(regexFloat) || formData.cave.numberOfTreasures <= 0) ?
-                                            <span style={{color: "red"}}>Количество сокровищ должно быть больше нуля!</span> : <></>
-                                    }
-                                </div>
+                                <FormTextInput
+                                    label="Количество сокровищ:"
+                                    errorMessage="Значение поля 'Количество сокровищ' должно быть больше нуля!"
+                                    value={dragonCaveNumberOfTreasures}
+                                    setValue={setDragonCaveNumberOfTreasures}
+                                    isValid={isDragonCaveNumberOfTreasuresValid}
+                                />
                             </>
                         )
                     }
@@ -283,41 +354,50 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                     {
                         killerExistence ? (
                             <>
-                                <select>
+                                <select
+                                    value={personSelectState}
+                                    onChange={(e) => {
+                                        setPersonSelectState(e.target.value);
+                                        setPersonName(JSON.parse(e.target.value).name);
+                                        setPersonEyeColor(JSON.parse(e.target.value).eyeColor);
+                                        setPersonHairColor(JSON.parse(e.target.value).hairColor);
+                                        setLocationX(JSON.parse(e.target.value).location.x);
+                                        setLocationY(JSON.parse(e.target.value).location.y);
+                                        setLocationZ(JSON.parse(e.target.value).location.z);
+                                        setPersonBirthday(JSON.parse(e.target.value).birthday);
+                                        setPersonHeight(JSON.parse(e.target.value).height)
+                                    }}
+                                >
                                     <option value="" disabled>Выберите объект:</option>
-                                    {persons && persons.map((option, index) => (
+                                    {(persons && persons.length > 0) && persons.map((option, index) => (
                                         <option key={index} value={option}>
                                             {option}
                                         </option>
                                     ))}
-                                    {!persons && <option value="" disabled>&lt;пусто&gt;</option>}
+                                    {(!persons || persons.length === 0) &&
+                                        <option value="" disabled>&lt;пусто&gt;</option>}
                                 </select>
                             </>
                         ) : (
                             <>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Имя:</label>
-                                    <input value={formData.killer.name || ""} name="killer.name" type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setKillerNameTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        killerNameTouched && (formData.killer.name === null || formData.killer.name === "") ? <span style={{color: "red"}}>Имя убийцы не может быть пустым!</span> : <></>
-                                    }
-                                </div>
+                                <FormTextInput
+                                    label="Имя:"
+                                    errorMessage="Значение поля 'Имя' не может быть пустым!"
+                                    value={personName}
+                                    setValue={setPersonName}
+                                    isValid={isPersonNameValid}
+                                />
+
                                 {/* инпут */}
                                 <div className={styles.form_group}>
                                     <label>Цвет глаз:</label>
-                                    <select value={formData.killer.eyeColor || ""} name="killer.eyeColor"
-                                            onChange={(e) => handleChange(e)}
-                                            onBlur={() => setKillerEyeColorTouched(true)}
+                                    <select
+                                        value={personEyeColor}
+                                        onChange={(e) => setPersonEyeColor(e.target.value)}
+                                        onBlur={() => setKillerEyeColorTouched(true)}
                                     >
                                         <option value="" disabled>Выберите цвет</option>
-                                        {color && color.map((option, index) => (
+                                        {colorList && colorList.map((option, index) => (
                                             <option key={index} value={option}>
                                                 {option}
                                             </option>
@@ -327,98 +407,66 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                                 {/* ошибка */}
                                 <div className={styles.form_group}>
                                     {
-                                        killerEyeColorTouched && (formData.killer.eyeColor === "") ?
-                                            <span style={{color: "red"}}>Поле &apos;Цвет глаз&apos; не может быть пустым!</span> : <></>
+                                        killerEyeColorTouched && !isPersonEyeColorValid ?
+                                            <span style={{color: "red"}}>Значение поля &apos;Цвет глаз&apos; не может быть пустым!</span> : <></>
                                     }
                                 </div>
+
                                 {/* инпут */}
                                 <div className={styles.form_group}>
                                     <label>Цвет волос:</label>
-                                    <select value={formData.killer.hairColor || ""} name="killer.hairColor"
-                                            onChange={(e) => handleChange(e)}>
+                                    <select value={personHairColor} name="killer.hairColor"
+                                            onChange={(e) => setPersonHairColor(e.target.value)}>
                                         <option value="">Выберите цвет</option>
-                                        {color && color.map((option, index) => (
+                                        {colorList && colorList.map((option, index) => (
                                             <option key={index} value={option}>
                                             {option}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Координаты: x:</label>
-                                    <input value={formData.killer.location.x || ""} name="killer.location.x" type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setKillerLocationXTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        killerLocationXTouched && (!(formData.killer.location.x).match(regexInt) && formData.killer.location.x !== "") ?
-                                            <span style={{color: "red"}}>Координата X должна быть представлена целым числом или отсутствовать вовсе!</span> : <></>
-                                    }
-                                </div>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Координаты: y:</label>
-                                    <input value={formData.killer.location.y || ""} name="killer.location.y" type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setKillerLocationYTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        killerLocationYTouched && (!(formData.killer.location.y).match(regexInt) && formData.coordinates.y !== "") ?
-                                            <span style={{color: "red"}}>Координата Y должна быть представлена целым числом!</span> : <></>
-                                    }
-                                </div>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Координаты: z:</label>
-                                    <input value={formData.killer.location.z || ""} name="killer.location.z" type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setKillerLocationZTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        killerLocationZTouched && (!(formData.killer.location.z).match(regexInt) && formData.killer.location.z !== "") ?
-                                            <span style={{color: "red"}}>Координата Z должна быть представлена целым числом или отсутствовать вовсе!</span> : <></>
-                                    }
-                                </div>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>День рождения:</label>
-                                    <input value={formData.killer.birthday || ""} name="killer.birthday" type="date"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setKillerBirthdayTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        killerBirthdayTouched && (formData.killer.birthday === null || formData.killer.birthday === "") ?
-                                            <span style={{color: "red"}}>Поле &apos;День рождения&apos; не может быть пустым!</span> : <></>
-                                    }
-                                </div>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Рост:</label>
-                                    <input value={formData.killer.height || ""} name="killer.height" type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setKillerHeightTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        killerHeightTouched && (!(formData.killer.height).match(regexInt) || formData.killer.height <= 0) ?
-                                            <span style={{color: "red"}}>Поле &apos;Рост&apos; должно быть больше нуля!</span> : <></>
-                                    }
-                                </div>
+
+                                <FormTextInput
+                                    inputType="text"
+                                    label="Координаты: x:"
+                                    errorMessage="Значение поля 'Местоположение: x' должно быть представлено целым числом или отсутствовать вовсе!"
+                                    value={locationX}
+                                    setValue={setLocationX}
+                                    isValid={isLocationXValid}
+                                />
+
+                                <FormTextInput
+                                    label="Координаты: y:"
+                                    errorMessage="Значение поля 'Местоположение: y' должно быть представлено целым числом!"
+                                    value={locationY}
+                                    setValue={setLocationY}
+                                    isValid={isLocationYValid}
+                                />
+
+                                <FormTextInput
+                                    label="Координаты: z:"
+                                    errorMessage="Значение поля 'Местоположение: z' должно быть представлено целым числом или отсутствовать вовсе!"
+                                    value={locationZ}
+                                    setValue={setLocationZ}
+                                    isValid={isLocationZValid}
+                                />
+
+                                <FormTextInput
+                                    inputType="date"
+                                    label="День рождения:"
+                                    errorMessage="Значение поля 'День рождения' не может быть пустым!"
+                                    value={personBirthday}
+                                    setValue={setPersonBirthday}
+                                    isValid={isPersonBirthdayValid}
+                                />
+
+                                <FormTextInput
+                                    label="Рост:"
+                                    errorMessage="Значение поля 'Рост' должно быть больше нуля!"
+                                    value={personHeight}
+                                    setValue={setPersonHeight}
+                                    isValid={isPersonHeightValid}
+                                />
                             </>
                         )
                     }
@@ -428,55 +476,42 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
 
                 <h2>Детали о драконе</h2>
                 <div className="form-section">
-                    {/* инпут */}
-                    <div className={styles.form_group}>
-                        <label>Возраст:</label>
-                        <input value={formData.age || ""} name="age" type="text"
-                               onChange={(e) => handleChange(e)}
-                               onBlur={() => setDragonAgeTouched(true)}
-                        />
-                    </div>
-                    {/* ошибка */}
-                    <div className={styles.form_group}>
-                        {
-                            dragonAgeTouched && (!(formData.age).match(regexInt) || formData.age <= 0) ?
-                                <span style={{color: "red"}}>Поле &apos;Возраст&apos; должно быть больше нуля!</span> : <></>
-                        }
-                    </div>
-                    {/* инпут */}
-                    <div className={styles.form_group}>
-                        <label>Описание:</label>
-                        <input value={formData.description || ""} name="description" type="text"
-                               onChange={(e) => handleChange(e)}/>
-                    </div>
-                    {/* инпут */}
-                    <div className={styles.form_group}>
-                        <label>Размах крыльев:</label>
-                        <input value={formData.wingspan || ""} name="wingspan" type="text"
-                               onChange={(e) => handleChange(e)}
-                               onBlur={() => setDragonWingspanTouched(true)}
-                        />
-                    </div>
-                    {/* ошибка */}
-                    <div className={styles.form_group}>
-                        {
-                            dragonWingspanTouched && (!(formData.wingspan).match(regexInt) || formData.wingspan <= 0) ?
-                                <span style={{color: "red"}}>Поле &apos;Размах крыльев&apos; должно быть больше нуля!</span> : <></>
-                        }
-                    </div>
+                    <FormTextInput
+                        label="Возраст:"
+                        errorMessage="Значение поля 'Возраст' должно быть больше нуля!"
+                        value={dragonAge}
+                        setValue={setDragonAge}
+                        isValid={isDragonAgeValid}
+                    />
+                    <FormTextInput
+                        label="Описание:"
+                        errorMessage=""
+                        value={dragonDescription}
+                        setValue={setDragonDescription}
+                        isValid={isDragonDescriptionValid}
+                    />
+                    <FormTextInput
+                        label="Размах крыльев:"
+                        errorMessage="Значение поля 'Размах крыльев' должно быть больше нуля!"
+                        value={dragonWingspan}
+                        setValue={setDragonWingspan}
+                        isValid={isDragonWingspanValid}
+                    />
+
                     {/* инпут */}
                     <div className={styles.form_group}>
                         <label>Характер:</label>
-                        <select value={formData.character || ""} name="character"
-                                onChange={(e) => handleChange(e)}>
+                        <select value={dragonCharacter} name="character"
+                                onChange={(e) => setDragonCharacter(e.target.value)}>
                             <option value="">Выберите характер</option>
-                            {dragonCharacter && dragonCharacter.map((option, index) => (
+                            {dragonCharacterList && dragonCharacterList.map((option, index) => ( // TODO: словарь -> ключи и значения
                                 <option key={index} value={option}>
                                     {option}
                                 </option>
                             ))}
                         </select>
                     </div>
+
                 </div>
 
                 {/*------------*/}
@@ -494,48 +529,40 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                     {
                         headExistence ? (
                             <>
-                                <select>
+                                <select
+                                    value={dragonHeadSelectState}
+                                    onChange={(e) => {
+                                        setDragonHeadSelectState(e.target.value);
+                                        setDragonHeadEyesCount(JSON.parse(e.target.value).eyesCount);
+                                        setDragonHeadToothCount(JSON.parse(e.target.value).toothCount);
+                                    }}
+                                >
                                     <option value="" disabled>Выберите объект:</option>
-                                    {heads && heads.map((option, index) => (
+                                    {(heads && heads.length > 0) && heads.map((option, index) => (
                                         <option key={index} value={option}>
                                             {option}
                                         </option>
                                     ))}
-                                    {!heads && <option value="" disabled>&lt;пусто&gt;</option>}
+                                    {(!heads || heads.length === 0) &&
+                                        <option value="" disabled>&lt;пусто&gt;</option>}
                                 </select>
                             </>
                         ) : (
                             <>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Количество глаз:</label>
-                                    <input value={formData.head.eyesCount || ""} name="head.eyesCount" type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setDragonHeadEyesCountTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        dragonHeadEyesCountTouched && (!(formData.head.eyesCount).match(regexFloat) && formData.head.eyesCount !== "") ?
-                                            <span style={{color: "red"}}>Количество глаз должно быть представлено десятичным числом или отсутствовать вовсе!</span> : <></>
-                                    }
-                                </div>
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Количество зубов:</label>
-                                    <input value={formData.head.toothCount || ""} name="head.toothCount" type="text"
-                                           onChange={(e) => handleChange(e)}
-                                           onBlur={() => setDragonHeadToothCountTouched(true)}
-                                    />
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        dragonHeadToothCountTouched && (!(formData.head.toothCount).match(regexFloat) || formData.head.toothCount === "") ?
-                                            <span style={{color: "red"}}>Количество зубов должно быть представлено десятичным числом!</span> : <></>
-                                    }
-                                </div>
+                                <FormTextInput
+                                    label="Количество глаз:"
+                                    errorMessage="Значение поля 'Количество глаз' должно быть представлено в виде десятичного числа или отсутствовать вовсе!"
+                                    value={dragonHeadEyesCount}
+                                    setValue={setDragonHeadEyesCount}
+                                    isValid={isDragonHeadEyesCountValid}
+                                />
+                                <FormTextInput
+                                    label="Количество зубов:"
+                                    errorMessage="Значение поля 'Количество зубов' должно быть представлено в виде десятичного числа!"
+                                    value={dragonHeadToothCount}
+                                    setValue={setDragonHeadToothCount}
+                                    isValid={isDragonHeadToothCountValid}
+                                />
                             </>
                         )
                     }

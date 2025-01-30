@@ -1,11 +1,12 @@
 import Navbar from "../components/Navbar/Navbar.jsx";
 import styles from "../page-styles/Home.module.css";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Modal from "../components/Modal/Modal.jsx";
 import {crudCreate, crudRead, crudUpdate, crudDelete, crudReadMany, crudDeleteMany} from "../utils/crud.js";
 import DragonTable from "../components/Table/DragonTable.jsx";
 import CreateDragon from "../components/CreateDragon/CreateDragon.jsx";
 import {useAuth} from "../components/utils/AuthProvider.jsx";
+import AdditionalFunctions from "../components/Other/AdditionalFunctions.jsx";
 
 function Home({ pageTitle }) {
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
@@ -13,6 +14,7 @@ function Home({ pageTitle }) {
     const { logout } = useAuth();
 
     const [createDragonModalActive, setCreateDragonModalActive] = useState(false);
+    const [additionalFunctionsModalActive, setAdditionalFunctionsModalActive] = useState(false);
 
     const [tableReload, setTableReload] = useState(false);
 
@@ -85,7 +87,8 @@ function Home({ pageTitle }) {
                     Быстрые кнопки
                 </h1>
 
-                <button onClick={() => setCreateDragonModalActive(true)}>CREATE POPUP</button>
+                <button onClick={() => setCreateDragonModalActive(true)}>СОЗДАТЬ ДРАКОНА</button>
+                <button onClick={() => setAdditionalFunctionsModalActive(true)}>СПЕЦИАЛЬНЫЕ ФУНКЦИИ</button>
 
                 <DragonTable
                     fetchData={crudReadMany}
@@ -107,6 +110,12 @@ function Home({ pageTitle }) {
 
                     tableReloadParentState={tableReload}
                     setTableReloadParentState={setTableReload}
+                />
+            </Modal>
+
+            <Modal active={additionalFunctionsModalActive} setActive={setAdditionalFunctionsModalActive}>
+                <AdditionalFunctions
+                    loadDataWrapperWithoutReload={loadDataWrapperWithoutReload}
                 />
             </Modal>
         </>
