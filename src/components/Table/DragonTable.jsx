@@ -161,12 +161,12 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, lo
         <>
             <button onClick={() => {
                 loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, Math.random() < 0.5 ? dragon1 : dragon2]);
-            }}>CREATE
+            }}>БЫСТРОЕ СОЗДАНИЕ (ОДИН ДРАКОН)
             </button>
 
             <button onClick={() => {
                 loadDataWrapper(crudDeleteMany, [`${BASE_URL}/dragons`]);
-            }}>DELETE MANY
+            }}>УДАЛИТЬ ВСЕХ ДРАКОНОВ (ТОЛЬКО МОИ)
             </button>
 
             <h1>Таблица данных</h1>
