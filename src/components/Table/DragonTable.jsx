@@ -11,7 +11,7 @@ import {
 import {useAuth} from "../utils/AuthProvider.jsx";
 import styles from "./Table.module.css";
 
-const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, tableReloadParentState, setTableReloadParentState }) => {
+const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) => {
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
 
     const { logout } = useAuth();
@@ -226,34 +226,39 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                         <th rowSpan={3}>ID</th>
                         <th rowSpan={3}>Owner</th>
                         <th rowSpan={3}>Name</th>
-                        <th colSpan={2}>Coordinates</th>
-                        <th colSpan={1}>Cave</th>
-                        <th colSpan={8}>Killer</th>
+                        <th colSpan={3}>Coordinates</th>
+                        <th colSpan={2}>Cave</th>
+                        <th colSpan={10}>Killer</th>
                         <th rowSpan={3}>Age</th>
                         <th rowSpan={3}>Description</th>
                         <th rowSpan={3}>Wingspan</th>
                         <th rowSpan={3}>Character</th>
-                        <th colSpan={2}>Head</th>
+                        <th colSpan={3}>Head</th>
                         <th rowSpan={3}>Edit</th>
                         <th rowSpan={3}>Remove</th>
                     </tr>
                     <tr>
+                        <th rowSpan={2}>id</th>
                         <th rowSpan={2}>x</th>
                         <th rowSpan={2}>y</th>
 
+                        <th rowSpan={2}>id</th>
                         <th rowSpan={2}>number of treasures</th>
 
+                        <th rowSpan={2}>id</th>
                         <th rowSpan={2}>name</th>
                         <th rowSpan={2}>eye color</th>
                         <th rowSpan={2}>hair color</th>
-                        <th colSpan={3}>location</th>
+                        <th colSpan={4}>location</th>
                         <th rowSpan={2}>birthday</th>
                         <th rowSpan={2}>height</th>
 
+                        <th rowSpan={2}>id</th>
                         <th rowSpan={2}>eyes count</th>
                         <th rowSpan={2}>tooth count</th>
                     </tr>
                     <tr>
+                        <th>id</th>
                         <th>x</th>
                         <th>y</th>
                         <th>z</th>
@@ -276,12 +281,16 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                             <td>{item.id}</td>
                             <td>{item.ownerId}</td>
                             <td>{item.name}</td>
+                            <td>{item.coordinates.id}</td>
                             <td>{item.coordinates.x}</td>
                             <td>{item.coordinates.y}</td>
+                            <td>{item.cave.id}</td>
                             <td>{item.cave.numberOfTreasures}</td>
+                            <td>{item.killer.id}</td>
                             <td>{item.killer.name}</td>
                             <td>{item.killer.eyeColor}</td>
                             <td>{item.killer.hairColor}</td>
+                            <td>{item.killer.location.id}</td>
                             <td>{item.killer.location.x}</td>
                             <td>{item.killer.location.y}</td>
                             <td>{item.killer.location.z}</td>
@@ -291,13 +300,14 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
                             <td>{item.description}</td>
                             <td>{item.wingspan}</td>
                             <td>{item.character}</td>
+                            <td>{item.head.id}</td>
                             <td>{item.head.eyesCount}</td>
                             <td>{item.head.toothCount}</td>
                             <td>
                                 <button onClick={() => {
-                                    // crudUpdate(`${BASE_URL}/dragon`, id);
-                                    // setReload(true);
                                     console.log(item);
+                                    loadDataWrapper(crudUpdate, [`${BASE_URL}/dragon`, item.id, item])
+                                        .then((rd) => console.log(rd));
                                 }}>
                                     /
                                 </button>
@@ -318,15 +328,34 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, ta
             {/* универсально, но нужно передать хуки состояния и создать методы */}
 
             <div className={styles.button_block}>
-                <button disabled={true}>&lt;&lt;</button>
-                <button className={styles.turn_page} id="decrease-page" onClick={() => handlePageChange(-1)}
-                        disabled={page === 0}>&lt;
-                </button>
+                <button
+                    className={styles.turn_page}
+                    id="decrease-page-min"
+                    onClick={() => {
+                        setPage(0);
+                    }} disabled={page === 0}>&lt;&lt;</button>
+
+                <button
+                    className={styles.turn_page}
+                    id="decrease-page"
+                    onClick={() => handlePageChange(-1)}
+                    disabled={page === 0}>&lt;</button>
+
                 <p>{page + 1}</p>
-                <button className={styles.turn_page} id="increase-page" onClick={() => handlePageChange(1)}
-                        disabled={data.length < 10}>&gt;
-                </button>
-                <button disabled={true}>&gt;&gt;</button>
+
+                <button
+                    className={styles.turn_page}
+                    id="increase-page"
+                    onClick={() => {
+                        handlePageChange(1);
+                    }} disabled={data.length < size}>&gt;</button>
+
+                <button
+                    className={styles.turn_page}
+                    id="increase-page-max"
+                    onClick={() => {
+                        return;
+                    }} disabled={true}>&gt;&gt;</button>
             </div>
 
             <div className={styles.button_block}>

@@ -2,7 +2,7 @@ import styles from "./CreateDragon.module.css"
 import React, {useEffect, useState} from "react";
 import {crudCreate, crudDeleteMany, crudRead, crudReadMany} from "../../utils/crud.js";
 
-function CreateDragon({ loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) {
+function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) {
 
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
 
@@ -107,19 +107,36 @@ function CreateDragon({ loadDataWrapper, loadDataWrapperWithoutReload, tableRelo
     const [heads, setHeads] = useState(null);
 
     useEffect(() => {
-        loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/coordinates`]).then(rd => {
-            setCoordinates(rd.data);
-        });
-        loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/caves`]).then(rd => {
-            setCaves(rd.data);
-        })
-        loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/persons`]).then(rd => {
-            setPersons(rd.data);
-        })
-        loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/heads`]).then(rd => {
-            setHeads(rd.data);
-        })
-    }, [tableReloadParentState]);
+        if (coordinatesExistence) {
+            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/coordinates`]).then(rd => {
+                setCoordinates(rd.data);
+            });
+        }
+    }, [coordinatesExistence]);
+
+    useEffect(() => {
+        if (caveExistence) {
+            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/caves`]).then(rd => {
+                setCaves(rd.data);
+            })
+        }
+    }, [caveExistence]);
+
+    useEffect(() => {
+        if (killerExistence) {
+            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/persons`]).then(rd => {
+                setPersons(rd.data);
+            })
+        }
+    }, [killerExistence]);
+
+    useEffect(() => {
+        if (headExistence) {
+            loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/heads`]).then(rd => {
+                setHeads(rd.data);
+            })
+        }
+    }, [headExistence]);
 
     return (
         <div className={styles.form_wrapper}>

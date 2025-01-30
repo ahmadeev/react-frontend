@@ -93,6 +93,7 @@ function Home({ pageTitle }) {
                     deleteOneUrl={`${BASE_URL}/dragon`}
 
                     loadDataWrapper={loadDataWrapper}
+                    loadDataWrapperWithoutReload={loadDataWrapperWithoutReload}
 
                     tableReloadParentState={tableReload}
                     setTableReloadParentState={setTableReload}
