@@ -28,7 +28,7 @@ export function crudUpdate(url, id, object=null) {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${sessionStorage.getItem('session-token')}`,
         },
-        body: JSON.stringify({object}), // сюда засунуть обновляемый объект
+        body: JSON.stringify(object), // сюда засунуть обновляемый объект
     })
 }
 

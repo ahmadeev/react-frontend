@@ -10,6 +10,8 @@ import {
 } from "../../utils/object.model.js";
 import {useAuth} from "../utils/AuthProvider.jsx";
 import styles from "./Table.module.css";
+import CreateDragon from "../CreateDragon/CreateDragon.jsx";
+import Modal from "../Modal/Modal.jsx";
 
 const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) => {
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
@@ -26,6 +28,10 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, lo
     const [sortDir, setSortDir] = useState("ASC");
 
     const [isLoading, setIsLoading] = useState(true);
+
+    // модальное окно формы апдейта и прототип для заполнения полей формы апдейта
+    const [updateDragonModalActive, setUpdateDragonModalActive] = useState(false);
+    const [currentItem, setCurrentItem] = useState(null);
 
     const handlePageChange = (direction) => {
         setPage((prevPage) => prevPage + direction);
@@ -305,9 +311,8 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, lo
                             <td>{item.head.toothCount}</td>
                             <td>
                                 <button onClick={() => {
-                                    console.log(item);
-                                    loadDataWrapper(crudUpdate, [`${BASE_URL}/dragon`, item.id, item])
-                                        .then((rd) => console.log(rd));
+                                    setCurrentItem(item);
+                                    setUpdateDragonModalActive(true);
                                 }}>
                                     /
                                 </button>
@@ -365,6 +370,17 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, lo
             </div>
 
             {/* стоп */}
+
+            <Modal active={updateDragonModalActive} setActive={setUpdateDragonModalActive}>
+                <CreateDragon
+                    isToCreate={false}
+                    prototype={currentItem}
+                    loadDataWrapper={loadDataWrapper}
+                    loadDataWrapperWithoutReload={loadDataWrapperWithoutReload}
+                    tableReloadParentState={tableReloadParentState}
+                    setTableReloadParentState={setTableReloadParentState}
+                />
+            </Modal>
 
         </>
     );

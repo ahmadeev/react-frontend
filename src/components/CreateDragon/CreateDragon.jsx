@@ -1,6 +1,6 @@
 import styles from "./CreateDragon.module.css"
 import React, {useEffect, useState} from "react";
-import {crudCreate, crudDeleteMany, crudRead, crudReadMany} from "../../utils/crud.js";
+import {crudCreate, crudDeleteMany, crudRead, crudReadMany, crudUpdate} from "../../utils/crud.js";
 import FormTextInput from "./FormTextInput.jsx";
 import {
     CoordinatesDTO,
@@ -11,7 +11,7 @@ import {
     PersonDTO
 } from "../../utils/object.model.js";
 
-function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) {
+function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) {
 
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
 
@@ -61,8 +61,12 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
             )
         )
 
+        if (isToCreate) {
+            loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, formData]);
+        } else {
+            loadDataWrapper(crudUpdate, [`${BASE_URL}/dragon`, prototype.id, formData]);
+        }
         console.log("Submitted data:", formData);
-        loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, formData]);
     };
 
     // чекбоксы на привязку существующего объекта (1)/(0) самостоятельное создание объекта
@@ -99,13 +103,50 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
     const [heads, setHeads] = useState(null);
 
     useEffect(() => {
+        // console.log(prototype);
+
+        if (prototype !== null) {
+            setDragonName(prototype.name || "");
+            // ---
+            setCoordinatesId(prototype.coordinates.id || "");
+            setCoordinatesX(prototype.coordinates.x || "");
+            setCoordinatesY(prototype.coordinates.y || "");
+            // ---
+            setDragonCaveId(prototype.cave.id || "");
+            setDragonCaveNumberOfTreasures(prototype.cave.numberOfTreasures || "");
+            // ---
+            setPersonId(prototype.killer.id || "");
+            setPersonName(prototype.killer.name || "");
+            setPersonEyeColor(prototype.killer.eyeColor || "");
+            setPersonHairColor(prototype.killer.hairColor || "");
+            setPersonBirthday(new Date(prototype.killer.birthday).toLocaleDateString("sv-SE") || "");
+            setPersonHeight(prototype.killer.height || "");
+            // ---
+            setLocationId(prototype.killer.location.id || "");
+            setLocationX(prototype.killer.location.x || "");
+            setLocationY(prototype.killer.location.y || "");
+            setLocationZ(prototype.killer.location.z || "");
+            // ---
+            setDragonAge(prototype.age || "");
+            setDragonDescription(prototype.description || "");
+            setDragonWingspan(prototype.wingspan || "");
+            setDragonCharacter(prototype.character || "");
+            // ---
+            setDragonHeadId(prototype.head.id || "");
+            setDragonHeadEyesCount(prototype.head.eyesCount || "");
+            setDragonHeadToothCount(prototype.head.toothCount || "");
+        }
+
+    }, [prototype]);
+
+    useEffect(() => {
         if (coordinatesExistence) {
             loadDataWrapperWithoutReload(crudReadMany, [`${BASE_URL}/coordinates`])
                 .then(rd => {
                     setCoordinates(rd.data);
                 })
         } else {
-            setCoordinatesId(-1);
+            setCoordinatesId(-1); // сброс id после возвращения к ручному созданию
         }
     }, [coordinatesExistence]);
 
