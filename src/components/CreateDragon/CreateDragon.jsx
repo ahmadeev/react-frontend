@@ -28,17 +28,21 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
         let formData = new DragonDTO(
             dragonName,
             new CoordinatesDTO(
+                coordinatesId,
                 coordinatesX,
                 coordinatesY
             ),
             new DragonCaveDTO(
+                dragonCaveId,
                 dragonCaveNumberOfTreasures
             ),
             new PersonDTO(
+                personId,
                 personName,
                 personEyeColor,
                 personHairColor,
                 new LocationDTO(
+                    locationId,
                     locationX,
                     locationY,
                     locationZ
@@ -51,6 +55,7 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
             dragonWingspan,
             dragonCharacter,
             new DragonHeadDTO(
+                dragonHeadId,
                 dragonHeadEyesCount,
                 dragonHeadToothCount
             )
@@ -99,6 +104,8 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                 .then(rd => {
                     setCoordinates(rd.data);
                 })
+        } else {
+            setCoordinatesId(-1);
         }
     }, [coordinatesExistence]);
 
@@ -108,6 +115,8 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                 .then(rd => {
                     setCaves(rd.data);
                 })
+        } else {
+            setDragonCaveId(-1);
         }
     }, [caveExistence]);
 
@@ -117,8 +126,12 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                 .then(rd => {
                     setPersons(rd.data);
                 })
+        } else {
+            setPersonId(-1);
         }
     }, [killerExistence]);
+
+    // добавить location
 
     useEffect(() => {
         if (headExistence) {
@@ -126,6 +139,8 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                 .then(rd => {
                     setHeads(rd.data);
                 })
+        } else {
+            setDragonHeadId(-1);
         }
     }, [headExistence]);
 
@@ -134,6 +149,11 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
     const [dragonName, setDragonName] = useState("");
     const isDragonNameValid = () => {
         return dragonName !== null && dragonName !== "";
+    }
+
+    const [coordinatesId, setCoordinatesId] = useState("");
+    const isCoordinatesIdValid = () => {
+        return coordinatesId.match(regexInt) && coordinatesId >= 0;
     }
 
     const [coordinatesX, setCoordinatesX] = useState("");
@@ -146,9 +166,19 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
         return coordinatesY === null || coordinatesY === "" || coordinatesY.match(regexInt);
     }
 
+    const [dragonCaveId, setDragonCaveId] = useState("");
+    const isDragonCaveIdValid = () => {
+        return dragonCaveId.match(regexInt) && dragonCaveId >= 0;
+    }
+
     const [dragonCaveNumberOfTreasures, setDragonCaveNumberOfTreasures] = useState("");
     const isDragonCaveNumberOfTreasuresValid = () => {
         return dragonCaveNumberOfTreasures.match(regexFloat) && dragonCaveNumberOfTreasures > 0;
+    }
+
+    const [personId, setPersonId] = useState("");
+    const isPersonIdValid = () => {
+        return personId.match(regexInt) && personId >= 0;
     }
 
     const [personName, setPersonName] = useState("");
@@ -164,6 +194,11 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
     const [personHairColor, setPersonHairColor] = useState("");
     const isPersonHairColorValid = () => {
         return true;
+    }
+
+    const [locationId, setLocationId] = useState("");
+    const isLocationIdValid = () => {
+        return locationId.match(regexInt) && locationId >= 0;
     }
 
     const [locationX, setLocationX] = useState("");
@@ -209,6 +244,11 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
     const [dragonCharacter, setDragonCharacter] = useState("");
     const isDragonCharacterValid = () => {
         return true;
+    }
+
+    const [dragonHeadId, setDragonHeadId] = useState("");
+    const isDragonHeadIdValid = () => {
+        return dragonHeadId.match(regexInt) && dragonHeadId >= 0;
     }
 
     const [dragonHeadEyesCount, setDragonHeadEyesCount] = useState("");
@@ -259,6 +299,7 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                                     value={coordinatesSelectState}
                                     onChange={(e) => {
                                         setCoordinatesSelectState(e.target.value);
+                                        setCoordinatesId(JSON.parse(e.target.value).id);
                                         setCoordinatesX(JSON.parse(e.target.value).x);
                                         setCoordinatesY(JSON.parse(e.target.value).y);
                                     }}
@@ -311,6 +352,7 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                                 <select
                                     value={dragonCaveSelectState}
                                     onChange={(e) => {
+                                        setDragonCaveId(JSON.parse(e.target.value).id);
                                         setDragonCaveSelectState(e.target.value);
                                         setDragonCaveNumberOfTreasures(JSON.parse(e.target.value).numberOfTreasures);
                                     }}
@@ -357,10 +399,12 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                                 <select
                                     value={personSelectState}
                                     onChange={(e) => {
+                                        setPersonId(JSON.parse(e.target.value).id);
                                         setPersonSelectState(e.target.value);
                                         setPersonName(JSON.parse(e.target.value).name);
                                         setPersonEyeColor(JSON.parse(e.target.value).eyeColor);
                                         setPersonHairColor(JSON.parse(e.target.value).hairColor);
+                                        setLocationId(JSON.parse(e.target.value).location.id);
                                         setLocationX(JSON.parse(e.target.value).location.x);
                                         setLocationY(JSON.parse(e.target.value).location.y);
                                         setLocationZ(JSON.parse(e.target.value).location.z);
@@ -533,6 +577,7 @@ function CreateDragon({ prototype=null, loadDataWrapper, loadDataWrapperWithoutR
                                     value={dragonHeadSelectState}
                                     onChange={(e) => {
                                         setDragonHeadSelectState(e.target.value);
+                                        setDragonHeadId(JSON.parse(e.target.value).id);
                                         setDragonHeadEyesCount(JSON.parse(e.target.value).eyesCount);
                                         setDragonHeadToothCount(JSON.parse(e.target.value).toothCount);
                                     }}

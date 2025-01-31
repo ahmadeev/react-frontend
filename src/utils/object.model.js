@@ -1,18 +1,21 @@
 export class CoordinatesDTO {
-    constructor(x, y) {
+    constructor(id=-1, x, y) {
+        this.id = id;
         this.x = x;
         this.y = y;
     }
 }
 
 export class DragonCaveDTO {
-    constructor(numberOfTreasures) {
+    constructor(id=-1, numberOfTreasures) {
+        this.id = id;
         this.numberOfTreasures = numberOfTreasures;
     }
 }
 
 export class PersonDTO {
-    constructor(name, eyeColor, hairColor, location, birthday, height) {
+    constructor(id=-1, name, eyeColor, hairColor, location, birthday, height) {
+        this.id = id;
         this.name = name;
         this.eyeColor = eyeColor;
         this.hairColor = hairColor;
@@ -23,7 +26,8 @@ export class PersonDTO {
 }
 
 export class LocationDTO {
-    constructor(x, y, z) {
+    constructor(id=-1, x, y, z) {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -31,7 +35,8 @@ export class LocationDTO {
 }
 
 export class DragonHeadDTO {
-    constructor(eyesCount, toothCount) {
+    constructor(id=-1, eyesCount, toothCount) {
+        this.id = id;
         this.eyesCount = eyesCount;
         this.toothCount = toothCount;
     }
