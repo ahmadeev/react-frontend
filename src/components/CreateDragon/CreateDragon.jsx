@@ -81,6 +81,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
     // рудимент
     const [killerEyeColorTouched, setKillerEyeColorTouched] = useState(false);
 
+    // было бы круто единоразово получать с бэка эти два списка
     const dragonCharacterList = [
         "CUNNING",
         "GOOD",
@@ -192,34 +193,35 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
         return dragonName !== null && dragonName !== "";
     }
 
+    // ниже в функции валидации преобразование number типа в строковый (иначе ошибка при отмене фокуса на инпут)
     const [coordinatesId, setCoordinatesId] = useState("");
     const isCoordinatesIdValid = () => {
-        return coordinatesId.match(regexInt) && coordinatesId >= 0;
+        return ("" + coordinatesId).match(regexInt) && coordinatesId >= 0;
     }
 
     const [coordinatesX, setCoordinatesX] = useState("");
     const isCoordinatesXValid = () => {
-        return coordinatesX.match(regexInt) && coordinatesX > -596;
+        return ("" + coordinatesX).match(regexInt) && coordinatesX > -596;
     }
 
     const [coordinatesY, setCoordinatesY] = useState("");
     const isCoordinatesYValid = () => {
-        return coordinatesY === null || coordinatesY === "" || coordinatesY.match(regexInt);
+        return coordinatesY === null || coordinatesY === "" || ("" + coordinatesY).match(regexInt);
     }
 
     const [dragonCaveId, setDragonCaveId] = useState("");
     const isDragonCaveIdValid = () => {
-        return dragonCaveId.match(regexInt) && dragonCaveId >= 0;
+        return ("" + dragonCaveId).match(regexInt) && dragonCaveId >= 0;
     }
 
     const [dragonCaveNumberOfTreasures, setDragonCaveNumberOfTreasures] = useState("");
     const isDragonCaveNumberOfTreasuresValid = () => {
-        return dragonCaveNumberOfTreasures.match(regexFloat) && dragonCaveNumberOfTreasures > 0;
+        return ("" + dragonCaveNumberOfTreasures).match(regexFloat) && dragonCaveNumberOfTreasures > 0;
     }
 
     const [personId, setPersonId] = useState("");
     const isPersonIdValid = () => {
-        return personId.match(regexInt) && personId >= 0;
+        return ("" + personId).match(regexInt) && personId >= 0;
     }
 
     const [personName, setPersonName] = useState("");
@@ -239,22 +241,22 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
 
     const [locationId, setLocationId] = useState("");
     const isLocationIdValid = () => {
-        return locationId.match(regexInt) && locationId >= 0;
+        return ("" + locationId).match(regexInt) && locationId >= 0;
     }
 
     const [locationX, setLocationX] = useState("");
     const isLocationXValid = () => {
-        return locationX.match(regexInt) || locationX === "";
+        return ("" + locationX).match(regexInt) || locationX === "";
     }
 
     const [locationY, setLocationY] = useState("");
     const isLocationYValid = () => {
-        return locationY.match(regexInt) && locationY !== "";
+        return ("" + locationY).match(regexInt) && locationY !== "";
     }
 
     const [locationZ, setLocationZ] = useState("");
     const isLocationZValid = () => {
-        return locationZ.match(regexInt) || locationZ === "";
+        return ("" + locationZ).match(regexInt) || locationZ === "";
     }
 
     const [personBirthday, setPersonBirthday] = useState("");
@@ -264,12 +266,12 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
 
     const [personHeight, setPersonHeight] = useState("");
     const isPersonHeightValid = () => {
-        return personHeight.match(regexInt) && personHeight > 0;
+        return ("" + personHeight).match(regexInt) && personHeight > 0;
     }
 
     const [dragonAge, setDragonAge] = useState("");
     const isDragonAgeValid = () => {
-        return dragonAge.match(regexInt) && dragonAge > 0;
+        return ("" + dragonAge).match(regexInt) && dragonAge > 0;
     }
 
     const [dragonDescription, setDragonDescription] = useState("");
@@ -279,7 +281,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
 
     const [dragonWingspan, setDragonWingspan] = useState("");
     const isDragonWingspanValid = () => {
-        return dragonWingspan.match(regexInt) && dragonWingspan > 0;
+        return ("" + dragonWingspan).match(regexInt) && dragonWingspan > 0;
     }
 
     const [dragonCharacter, setDragonCharacter] = useState("");
@@ -289,18 +291,30 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
 
     const [dragonHeadId, setDragonHeadId] = useState("");
     const isDragonHeadIdValid = () => {
-        return dragonHeadId.match(regexInt) && dragonHeadId >= 0;
+        return ("" + dragonHeadId).match(regexInt) && dragonHeadId >= 0;
     }
 
     const [dragonHeadEyesCount, setDragonHeadEyesCount] = useState("");
     const isDragonHeadEyesCountValid = () => {
-        return dragonHeadEyesCount.match(regexFloat) || dragonHeadEyesCount === "";
+        return ("" + dragonHeadEyesCount).match(regexFloat) || dragonHeadEyesCount === "";
     }
 
     const [dragonHeadToothCount, setDragonHeadToothCount] = useState("");
     const isDragonHeadToothCountValid = () => {
-        return dragonHeadToothCount.match(regexFloat) && dragonHeadToothCount !== "";
+        return ("" + dragonHeadToothCount).match(regexFloat) && dragonHeadToothCount !== "";
     }
+
+    const isFormValid = () => {
+        return isDragonNameValid() && isCoordinatesXValid() && isCoordinatesYValid()
+            && isDragonCaveNumberOfTreasuresValid() && isPersonNameValid() && isPersonEyeColorValid()
+            && isPersonHairColorValid() && isLocationXValid() && isLocationYValid() && isLocationZValid()
+            && isPersonBirthdayValid() && isPersonHeightValid() && isDragonAgeValid() && isDragonDescriptionValid()
+            && isDragonWingspanValid() && isDragonCharacterValid() && isDragonHeadEyesCountValid() && isDragonHeadToothCountValid()
+    }
+
+    const [isValid, setIsValid] = useState(isFormValid());
+
+    // useEffect
 
     const [coordinatesSelectState, setCoordinatesSelectState] = useState("");
     const [dragonCaveSelectState, setDragonCaveSelectState] = useState("");
@@ -309,7 +323,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
 
     return (
         <div className={styles.form_wrapper}>
-            <form>
+            <form onChange={() => setIsValid(isFormValid())}> {/* TODO: валидация :( */}
                 <h2>Информация о драконе</h2>
                 <div className="form-section">
                     <FormTextInput
@@ -669,7 +683,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
                 {/*------------*/}
 
                 <button onClick={(e) => handleSubmit(e)}>CREATE
-                </button>
+                </button> {/* (disabled={!isValid}) TODO: валидация :( */}
             </form>
         </div>
     )

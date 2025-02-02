@@ -15,6 +15,7 @@ import Modal from "../Modal/Modal.jsx";
 
 const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) => {
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
+    const WS_URL = "ws://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/ws/dragons";
 
     const { logout } = useAuth();
 
@@ -138,7 +139,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, lo
     const wsRef = useRef(null);
 
     useEffect(() => {
-        wsRef.current = new WebSocket("ws://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/ws/dragons");
+        wsRef.current = new WebSocket(WS_URL);
 
         wsRef.current.onopen = () => {
             console.log("[WS] Connection opened.")
