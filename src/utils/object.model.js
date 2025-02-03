@@ -1,20 +1,22 @@
 export class CoordinatesDTO {
-    constructor(id=-1, x, y) {
+    constructor(id=-1, x, y, ownerId=-1) {
         this.id = id;
         this.x = x;
         this.y = y;
+        this.ownerId = ownerId;
     }
 }
 
 export class DragonCaveDTO {
-    constructor(id=-1, numberOfTreasures) {
+    constructor(id=-1, numberOfTreasures, ownerId=-1) {
         this.id = id;
         this.numberOfTreasures = numberOfTreasures;
+        this.ownerId = ownerId;
     }
 }
 
 export class PersonDTO {
-    constructor(id=-1, name, eyeColor, hairColor, location, birthday, height) {
+    constructor(id=-1, name, eyeColor, hairColor, location, birthday, height, ownerId=-1) {
         this.id = id;
         this.name = name;
         this.eyeColor = eyeColor;
@@ -22,28 +24,43 @@ export class PersonDTO {
         this.location = location;
         this.birthday = birthday;
         this.height = height;
+        this.ownerId = ownerId;
     }
 }
 
 export class LocationDTO {
-    constructor(id=-1, x, y, z) {
+    constructor(id=-1, x, y, z, ownerId=-1) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.z = z;
+        this.ownerId = ownerId;
     }
 }
 
 export class DragonHeadDTO {
-    constructor(id=-1, eyesCount, toothCount) {
+    constructor(id=-1, eyesCount, toothCount, ownerId=-1) {
         this.id = id;
         this.eyesCount = eyesCount;
         this.toothCount = toothCount;
+        this.ownerId = ownerId;
     }
 }
 
 export class DragonDTO {
-    constructor(name, coordinates, cave, killer = null, age = 0, description = null, wingspan, character = null, head = null) {
+    constructor(
+        id=-1,
+        name,
+        coordinates,
+        cave,
+        killer = null,
+        age = 0,
+        description = null,
+        wingspan,
+        character = null,
+        head = null,
+        ownerId=-1
+    ) {
         // проверка на обязательные поля и их валидность
         if (!name || typeof name !== 'string' || name.trim() === '') {
             throw new Error('Name cannot be null or empty');
@@ -62,6 +79,7 @@ export class DragonDTO {
         }
 
         // установка значений свойств
+        this.id = id;
         this.name = name;
         this.coordinates = coordinates;
         this.cave = cave;
@@ -71,5 +89,6 @@ export class DragonDTO {
         this.wingspan = wingspan;
         this.character = character;
         this.head = head;
+        this.ownerId = ownerId;
     }
 }

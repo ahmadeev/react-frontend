@@ -13,7 +13,17 @@ import styles from "./Table.module.css";
 import CreateDragon from "../CreateDragon/CreateDragon.jsx";
 import Modal from "../Modal/Modal.jsx";
 
-const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) => {
+const DragonTable = ({
+                         fetchData,
+                         readManyUrl,
+                         deleteOneUrl,
+                         loadDataWrapper,
+                         loadDataWrapperWithoutReload,
+                         tableReloadParentState,
+                         setTableReloadParentState,
+                         setAlertMessageParentState,
+                         setAlertStatusParentState
+}) => {
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
     const WS_URL = "ws://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/ws/dragons";
 
@@ -90,6 +100,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, lo
     const head = new DragonHeadDTO(-1, 200, 100500);
 
     const dragon1 = new DragonDTO(
+        -1,
         "Fire Dragon",
         coordinates,
         cave,
@@ -102,6 +113,7 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, lo
     );
 
     const dragon2 = new DragonDTO(
+        -1,
         "Air Dragon",
         coordinates,
         cave,
@@ -293,20 +305,20 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, lo
                             <td>{item.coordinates.y}</td>
                             <td>{item.cave.id}</td>
                             <td>{item.cave.numberOfTreasures}</td>
-                            <td>{item.killer.id}</td>
-                            <td>{item.killer.name}</td>
-                            <td>{item.killer.eyeColor}</td>
-                            <td>{item.killer.hairColor}</td>
-                            <td>{item.killer.location.id}</td>
-                            <td>{item.killer.location.x}</td>
-                            <td>{item.killer.location.y}</td>
-                            <td>{item.killer.location.z}</td>
-                            <td>{item.killer.birthday.join("-")}</td>
-                            <td>{item.killer.height}</td>
+                            <td>{item.killer?.id || "-"}</td>
+                            <td>{item.killer?.name || "-"}</td>
+                            <td>{item.killer?.eyeColor || "-"}</td>
+                            <td>{item.killer?.hairColor || "-"}</td>
+                            <td>{item.killer?.location.id || "-"}</td>
+                            <td>{item.killer?.location.x || "-"}</td>
+                            <td>{item.killer?.location.y || "-"}</td>
+                            <td>{item.killer?.location.z || "-"}</td>
+                            <td>{item.killer?.birthday.join("-") || "-"}</td>
+                            <td>{item.killer?.height || "-"}</td>
                             <td>{item.age}</td>
                             <td>{item.description}</td>
                             <td>{item.wingspan}</td>
-                            <td>{item.character}</td>
+                            <td>{item.character || "-"}</td>
                             <td>{item.head.id}</td>
                             <td>{item.head.eyesCount}</td>
                             <td>{item.head.toothCount}</td>
@@ -319,8 +331,11 @@ const DragonTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, lo
                                 </button>
                             </td>
                             <td>
-                                <button onClick={() => {
-                                    loadDataWrapper(crudDelete, [deleteOneUrl, item.id])
+                                <button onClick={async () => {
+                                    let res = await loadDataWrapper(crudDelete, [deleteOneUrl, item.id]);
+                                    let rd = await res.json();
+                                    setAlertMessageParentState("Error occurred! Details: " + rd.details);
+                                    setAlertStatusParentState((prev) => !prev);
                                 }}>
                                     X
                                 </button>

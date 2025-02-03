@@ -7,6 +7,7 @@ import DragonTable from "../components/Table/DragonTable.jsx";
 import CreateDragon from "../components/CreateDragon/CreateDragon.jsx";
 import {useAuth} from "../components/utils/AuthProvider.jsx";
 import AdditionalFunctions from "../components/Other/AdditionalFunctions.jsx";
+import Alert from "../components/Alert/Alert.jsx";
 
 function Home({ pageTitle }) {
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
@@ -18,10 +19,31 @@ function Home({ pageTitle }) {
 
     const [tableReload, setTableReload] = useState(false);
 
+    const [alertActive, setAlertActive] = useState(false);
+    const [alertMessage, setAlertMessage] = useState("");
+    const [alertStatus, setAlertStatus] = useState(false);
+
     useEffect(() => {
         document.title = pageTitle;
     })
 
+    useEffect(() => {
+        if (alertMessage !== "") {
+            setAlertActive(true);
+        }
+    }, [alertMessage, alertStatus])
+
+    class CustomError extends Error {
+        constructor(message, data) {
+            super(message);
+            this.data = data;
+        }
+    }
+
+    // возвращает мэпу из тела ответа в случае успеха или сам объект ответа в случае неуспеха
+    // было бы круто всегда возвращать одно и то же
+    // решение: [response, responseJson]
+    // проверить DragonTable.jsx (delete button) при изменении
     const loadDataWrapper = async (func, args) => {
         try {
             const response = await func(...args);
@@ -31,21 +53,22 @@ function Home({ pageTitle }) {
                     console.log("401 Error processing table refresh")
                     logout();
                 }
-                throw new Error();
+                throw new CustomError("", response);
             }
 
             let responseData;
             try {
                 responseData = await response.json();
             } catch (error) {
-                console.error("Error reading response body", error);
+                console.error("Error reading response body\n\n", error);
+                throw new CustomError("", response); // раньше не было throw
             }
             console.log(responseData)
             return responseData;
             // раньше setReload(true) был тут
         } catch (error) {
-            console.error("Error proccessing CRUD:", error);
-            return null;
+            console.error("Error proccessing CRUD.\n\n", error);
+            return error.data; // было null
         } finally {
             setTableReload((prev) => !prev);
         }
@@ -100,6 +123,9 @@ function Home({ pageTitle }) {
 
                     tableReloadParentState={tableReload}
                     setTableReloadParentState={setTableReload}
+
+                    setAlertMessageParentState={setAlertMessage}
+                    setAlertStatusParentState={setAlertStatus}
                 />
             </div>
 
@@ -118,6 +144,12 @@ function Home({ pageTitle }) {
                     loadDataWrapperWithoutReload={loadDataWrapperWithoutReload}
                 />
             </Modal>
+
+            <Alert
+                message={alertMessage}
+                isActive={alertActive}
+                onClose={() => setAlertActive(false)}
+            />
         </>
     )
 }

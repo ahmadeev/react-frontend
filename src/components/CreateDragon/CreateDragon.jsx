@@ -26,30 +26,37 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
         event.preventDefault();
 
         let formData = new DragonDTO(
+            dragonId,
             dragonName,
             new CoordinatesDTO(
                 coordinatesId,
                 coordinatesX,
-                coordinatesY
+                coordinatesY,
+                coordinatesOwnerId
             ),
             new DragonCaveDTO(
                 dragonCaveId,
-                dragonCaveNumberOfTreasures
+                dragonCaveNumberOfTreasures,
+                dragonCaveOwnerId
             ),
-            new PersonDTO(
-                personId,
-                personName,
-                personEyeColor,
-                personHairColor,
-                new LocationDTO(
-                    locationId,
-                    locationX,
-                    locationY,
-                    locationZ
-                ),
-                personBirthday,
-                personHeight
-            ),
+            dragonKillerInputNotNull ? (
+                new PersonDTO(
+                    personId,
+                    personName,
+                    personEyeColor,
+                    personHairColor,
+                    new LocationDTO(
+                        locationId,
+                        locationX,
+                        locationY,
+                        locationZ,
+                        locationOwnerId
+                    ),
+                    personBirthday,
+                    personHeight,
+                    personOwnerId
+                )
+            ) : null,
             dragonAge,
             dragonDescription,
             dragonWingspan,
@@ -57,8 +64,10 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
             new DragonHeadDTO(
                 dragonHeadId,
                 dragonHeadEyesCount,
-                dragonHeadToothCount
-            )
+                dragonHeadToothCount,
+                dragonHeadOwnerId
+            ),
+            dragonOwnerId
         )
 
         if (isToCreate) {
@@ -68,6 +77,9 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
         }
         console.log("Submitted data:", formData);
     };
+
+    // чекбоксы для nullable полей формы (только для вложенных объектов) TODO: валидация
+    const [dragonKillerInputNotNull, setDragonKillerInputNotNull] = useState(true);
 
     // чекбоксы на привязку существующего объекта (1)/(0) самостоятельное создание объекта
     const [coordinatesExistence, setCoordinatesExistence] = useState(false);
@@ -104,29 +116,38 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
     const [heads, setHeads] = useState(null);
 
     useEffect(() => {
+        if (prototype?.killer === null) setDragonKillerInputNotNull(false);
+    }, [prototype]);
+
+    useEffect(() => {
         // console.log(prototype);
 
         if (prototype !== null) {
+            setDragonId(prototype.id || "");
             setDragonName(prototype.name || "");
             // ---
             setCoordinatesId(prototype.coordinates.id || "");
             setCoordinatesX(prototype.coordinates.x || "");
             setCoordinatesY(prototype.coordinates.y || "");
+            setCoordinatesOwnerId(prototype.coordinates.ownerId || "")
             // ---
             setDragonCaveId(prototype.cave.id || "");
             setDragonCaveNumberOfTreasures(prototype.cave.numberOfTreasures || "");
+            setDragonCaveOwnerId(prototype.cave.ownerId || "");
             // ---
-            setPersonId(prototype.killer.id || "");
-            setPersonName(prototype.killer.name || "");
-            setPersonEyeColor(prototype.killer.eyeColor || "");
-            setPersonHairColor(prototype.killer.hairColor || "");
-            setPersonBirthday(new Date(prototype.killer.birthday).toLocaleDateString("sv-SE") || "");
-            setPersonHeight(prototype.killer.height || "");
+            setPersonId(prototype.killer?.id || "");
+            setPersonName(prototype.killer?.name || "");
+            setPersonEyeColor(prototype.killer?.eyeColor || "");
+            setPersonHairColor(prototype.killer?.hairColor || "");
+            setPersonBirthday(new Date(prototype.killer?.birthday).toLocaleDateString("sv-SE") || "");
+            setPersonHeight(prototype.killer?.height || "");
+            setPersonOwnerId(prototype.killer?.ownerId || "");
             // ---
-            setLocationId(prototype.killer.location.id || "");
-            setLocationX(prototype.killer.location.x || "");
-            setLocationY(prototype.killer.location.y || "");
-            setLocationZ(prototype.killer.location.z || "");
+            setLocationId(prototype.killer?.location.id || "");
+            setLocationX(prototype.killer?.location.x || "");
+            setLocationY(prototype.killer?.location.y || "");
+            setLocationZ(prototype.killer?.location.z || "");
+            setLocationOwnerId(prototype.killer?.location.ownerId || "");
             // ---
             setDragonAge(prototype.age || "");
             setDragonDescription(prototype.description || "");
@@ -136,6 +157,9 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
             setDragonHeadId(prototype.head.id || "");
             setDragonHeadEyesCount(prototype.head.eyesCount || "");
             setDragonHeadToothCount(prototype.head.toothCount || "");
+            setDragonHeadOwnerId(prototype.head.ownerId || "");
+            // ---
+            setDragonOwnerId(prototype.ownerId || "");
         }
 
     }, [prototype]);
@@ -147,7 +171,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
                     setCoordinates(rd.data);
                 })
         } else {
-            setCoordinatesId(-1); // сброс id после возвращения к ручному созданию
+            setCoordinatesId(prototype ? prototype.coordinates.id : -1); // сброс id после возвращения к ручному созданию
         }
     }, [coordinatesExistence]);
 
@@ -158,7 +182,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
                     setCaves(rd.data);
                 })
         } else {
-            setDragonCaveId(-1);
+            setDragonCaveId(prototype ? prototype.cave.id : -1);
         }
     }, [caveExistence]);
 
@@ -169,7 +193,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
                     setPersons(rd.data);
                 })
         } else {
-            setPersonId(-1);
+            setPersonId(prototype ? prototype.killer.id : -1);
         }
     }, [killerExistence]);
 
@@ -182,18 +206,24 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
                     setHeads(rd.data);
                 })
         } else {
-            setDragonHeadId(-1);
+            setDragonHeadId(prototype ? prototype.head.id : -1);
         }
     }, [headExistence]);
 
     // основы для полей ввода формы (передаются в FormTextInput и FormSelectInput)
+
+    // ниже в функции валидации преобразование number типа в строковый (иначе ошибка при отмене фокуса на инпут)
+    // неактуально для полей id, но нужно для работы других инпутов
+    const [dragonId, setDragonId] = useState("");
+    const isDragonIdValid = () => {
+        return ("" + dragonId).match(regexInt) && dragonId >= 0;
+    }
 
     const [dragonName, setDragonName] = useState("");
     const isDragonNameValid = () => {
         return dragonName !== null && dragonName !== "";
     }
 
-    // ниже в функции валидации преобразование number типа в строковый (иначе ошибка при отмене фокуса на инпут)
     const [coordinatesId, setCoordinatesId] = useState("");
     const isCoordinatesIdValid = () => {
         return ("" + coordinatesId).match(regexInt) && coordinatesId >= 0;
@@ -209,6 +239,11 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
         return coordinatesY === null || coordinatesY === "" || ("" + coordinatesY).match(regexInt);
     }
 
+    const [coordinatesOwnerId, setCoordinatesOwnerId] = useState("");
+    const isCoordinatesOwnerIdValid = () => {
+        return ("" + coordinatesOwnerId).match(regexInt) && coordinatesOwnerId >= 0;
+    }
+
     const [dragonCaveId, setDragonCaveId] = useState("");
     const isDragonCaveIdValid = () => {
         return ("" + dragonCaveId).match(regexInt) && dragonCaveId >= 0;
@@ -217,6 +252,11 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
     const [dragonCaveNumberOfTreasures, setDragonCaveNumberOfTreasures] = useState("");
     const isDragonCaveNumberOfTreasuresValid = () => {
         return ("" + dragonCaveNumberOfTreasures).match(regexFloat) && dragonCaveNumberOfTreasures > 0;
+    }
+
+    const [dragonCaveOwnerId, setDragonCaveOwnerId] = useState("");
+    const isDragonCaveOwnerIdValid = () => {
+        return ("" + dragonCaveOwnerId).match(regexInt) && dragonCaveOwnerId >= 0;
     }
 
     const [personId, setPersonId] = useState("");
@@ -259,6 +299,11 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
         return ("" + locationZ).match(regexInt) || locationZ === "";
     }
 
+    const [locationOwnerId, setLocationOwnerId] = useState("");
+    const isLocationOwnerIdValid = () => {
+        return ("" + locationOwnerId).match(regexInt) && locationOwnerId >= 0;
+    }
+
     const [personBirthday, setPersonBirthday] = useState("");
     const isPersonBirthdayValid = () => {
         return personBirthday !== null && personBirthday !== "";
@@ -267,6 +312,11 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
     const [personHeight, setPersonHeight] = useState("");
     const isPersonHeightValid = () => {
         return ("" + personHeight).match(regexInt) && personHeight > 0;
+    }
+
+    const [personOwnerId, setPersonOwnerId] = useState("");
+    const isPersonOwnerIdValid = () => {
+        return ("" + personOwnerId).match(regexInt) && personOwnerId >= 0;
     }
 
     const [dragonAge, setDragonAge] = useState("");
@@ -302,6 +352,16 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
     const [dragonHeadToothCount, setDragonHeadToothCount] = useState("");
     const isDragonHeadToothCountValid = () => {
         return ("" + dragonHeadToothCount).match(regexFloat) && dragonHeadToothCount !== "";
+    }
+
+    const [dragonHeadOwnerId, setDragonHeadOwnerId] = useState("");
+    const isDragonHeadOwnerIdValid = () => {
+        return ("" + dragonHeadOwnerId).match(regexInt) && dragonHeadOwnerId >= 0;
+    }
+
+    const [dragonOwnerId, setDragonOwnerId] = useState("");
+    const isDragonOwnerIdValid = () => {
+        return ("" + dragonOwnerId).match(regexInt) && dragonOwnerId >= 0;
     }
 
     const isFormValid = () => {
@@ -341,7 +401,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
                 <label>
                     <input type="checkbox" value={coordinatesExistence}
                            onChange={() => setCoordinatesExistence((prev) => !prev)}/>
-                    Существует?
+                    Выбрать из существующих?
                 </label>
                 <br/><br/>
 
@@ -396,7 +456,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
                 <label>
                     <input type="checkbox" value={caveExistence}
                            onChange={() => setCaveExistence((prev) => !prev)}/>
-                    Существует?
+                    Выбрать из существующих?
                 </label>
                 <br/><br/>
 
@@ -438,138 +498,153 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
 
                 {/*------------*/}
 
-                <h2>Убийца дракона</h2>
+                <h2>Убийца дракона
+                    <input
+                        type="checkbox"
+                        checked={dragonKillerInputNotNull}
+                        onChange={() => setDragonKillerInputNotNull((prev) => !prev)}
+                    />
+                </h2>
 
-                <label>
-                    <input type="checkbox" value={killerExistence}
-                           onChange={() => setKillerExistence((prev) => !prev)}/>
-                    Существует?
-                </label>
-                <br/><br/>
+                {
+                    dragonKillerInputNotNull ?
+                    (
+                        <>
+                            <label>
+                                <input type="checkbox" value={killerExistence}
+                                       onChange={() => setKillerExistence((prev) => !prev)}/>
+                                Выбрать из существующих?
+                            </label>
+                            <br/><br/>
 
-                <div className="form-section">
-                    {
-                        killerExistence ? (
-                            <>
-                                <select
-                                    value={personSelectState}
-                                    onChange={(e) => {
-                                        setPersonId(JSON.parse(e.target.value).id);
-                                        setPersonSelectState(e.target.value);
-                                        setPersonName(JSON.parse(e.target.value).name);
-                                        setPersonEyeColor(JSON.parse(e.target.value).eyeColor);
-                                        setPersonHairColor(JSON.parse(e.target.value).hairColor);
-                                        setLocationId(JSON.parse(e.target.value).location.id);
-                                        setLocationX(JSON.parse(e.target.value).location.x);
-                                        setLocationY(JSON.parse(e.target.value).location.y);
-                                        setLocationZ(JSON.parse(e.target.value).location.z);
-                                        setPersonBirthday(JSON.parse(e.target.value).birthday);
-                                        setPersonHeight(JSON.parse(e.target.value).height)
-                                    }}
-                                >
-                                    <option value="" disabled>Выберите объект:</option>
-                                    {(persons && persons.length > 0) && persons.map((option, index) => (
-                                        <option key={index} value={option}>
-                                            {option}
-                                        </option>
-                                    ))}
-                                    {(!persons || persons.length === 0) &&
-                                        <option value="" disabled>&lt;пусто&gt;</option>}
-                                </select>
-                            </>
-                        ) : (
-                            <>
-                                <FormTextInput
-                                    label="Имя:"
-                                    errorMessage="Значение поля 'Имя' не может быть пустым!"
-                                    value={personName}
-                                    setValue={setPersonName}
-                                    isValid={isPersonNameValid}
-                                />
+                            <div className="form-section">
+                                {
+                                    killerExistence ? (
+                                        <>
+                                            <select
+                                                value={personSelectState}
+                                                onChange={(e) => {
+                                                    setPersonId(JSON.parse(e.target.value).id);
+                                                    setPersonSelectState(e.target.value);
+                                                    setPersonName(JSON.parse(e.target.value).name);
+                                                    setPersonEyeColor(JSON.parse(e.target.value).eyeColor);
+                                                    setPersonHairColor(JSON.parse(e.target.value).hairColor);
+                                                    setLocationId(JSON.parse(e.target.value).location.id);
+                                                    setLocationX(JSON.parse(e.target.value).location.x);
+                                                    setLocationY(JSON.parse(e.target.value).location.y);
+                                                    setLocationZ(JSON.parse(e.target.value).location.z);
+                                                    setPersonBirthday(JSON.parse(e.target.value).birthday);
+                                                    setPersonHeight(JSON.parse(e.target.value).height)
+                                                }}
+                                            >
+                                                <option value="" disabled>Выберите объект:</option>
+                                                {(persons && persons.length > 0) && persons.map((option, index) => (
+                                                    <option key={index} value={option}>
+                                                        {option}
+                                                    </option>
+                                                ))}
+                                                {(!persons || persons.length === 0) &&
+                                                    <option value="" disabled>&lt;пусто&gt;</option>}
+                                            </select>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <FormTextInput
+                                                label="Имя:"
+                                                errorMessage="Значение поля 'Имя' не может быть пустым!"
+                                                value={personName}
+                                                setValue={setPersonName}
+                                                isValid={isPersonNameValid}
+                                            />
 
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Цвет глаз:</label>
-                                    <select
-                                        value={personEyeColor}
-                                        onChange={(e) => setPersonEyeColor(e.target.value)}
-                                        onBlur={() => setKillerEyeColorTouched(true)}
-                                    >
-                                        <option value="" disabled>Выберите цвет</option>
-                                        {colorList && colorList.map((option, index) => (
-                                            <option key={index} value={option}>
-                                                {option}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-                                {/* ошибка */}
-                                <div className={styles.form_group}>
-                                    {
-                                        killerEyeColorTouched && !isPersonEyeColorValid ?
-                                            <span style={{color: "red"}}>Значение поля &apos;Цвет глаз&apos; не может быть пустым!</span> : <></>
-                                    }
-                                </div>
+                                            {/* инпут */}
+                                            <div className={styles.form_group}>
+                                                <label>Цвет глаз:</label>
+                                                <select
+                                                    value={personEyeColor}
+                                                    onChange={(e) => setPersonEyeColor(e.target.value)}
+                                                    onBlur={() => setKillerEyeColorTouched(true)}
+                                                >
+                                                    <option value="" disabled>Выберите цвет</option>
+                                                    {colorList && colorList.map((option, index) => (
+                                                        <option key={index} value={option}>
+                                                            {option}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                            {/* ошибка */}
+                                            <div className={styles.form_group}>
+                                                {
+                                                    killerEyeColorTouched && !isPersonEyeColorValid ?
+                                                        <span
+                                                            style={{color: "red"}}>Значение поля &apos;Цвет глаз&apos; не может быть пустым!</span> : <></>
+                                                }
+                                            </div>
 
-                                {/* инпут */}
-                                <div className={styles.form_group}>
-                                    <label>Цвет волос:</label>
-                                    <select value={personHairColor} name="killer.hairColor"
-                                            onChange={(e) => setPersonHairColor(e.target.value)}>
-                                        <option value="">Выберите цвет</option>
-                                        {colorList && colorList.map((option, index) => (
-                                            <option key={index} value={option}>
-                                            {option}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
+                                            {/* инпут */}
+                                            <div className={styles.form_group}>
+                                                <label>Цвет волос:</label>
+                                                <select value={personHairColor} name="killer.hairColor"
+                                                        onChange={(e) => setPersonHairColor(e.target.value)}>
+                                                    <option value="">Выберите цвет</option>
+                                                    {colorList && colorList.map((option, index) => (
+                                                        <option key={index} value={option}>
+                                                            {option}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
 
-                                <FormTextInput
-                                    inputType="text"
-                                    label="Координаты: x:"
-                                    errorMessage="Значение поля 'Местоположение: x' должно быть представлено целым числом или отсутствовать вовсе!"
-                                    value={locationX}
-                                    setValue={setLocationX}
-                                    isValid={isLocationXValid}
-                                />
+                                            <FormTextInput
+                                                inputType="text"
+                                                label="Координаты: x:"
+                                                errorMessage="Значение поля 'Местоположение: x' должно быть представлено целым числом или отсутствовать вовсе!"
+                                                value={locationX}
+                                                setValue={setLocationX}
+                                                isValid={isLocationXValid}
+                                            />
 
-                                <FormTextInput
-                                    label="Координаты: y:"
-                                    errorMessage="Значение поля 'Местоположение: y' должно быть представлено целым числом!"
-                                    value={locationY}
-                                    setValue={setLocationY}
-                                    isValid={isLocationYValid}
-                                />
+                                            <FormTextInput
+                                                label="Координаты: y:"
+                                                errorMessage="Значение поля 'Местоположение: y' должно быть представлено целым числом!"
+                                                value={locationY}
+                                                setValue={setLocationY}
+                                                isValid={isLocationYValid}
+                                            />
 
-                                <FormTextInput
-                                    label="Координаты: z:"
-                                    errorMessage="Значение поля 'Местоположение: z' должно быть представлено целым числом или отсутствовать вовсе!"
-                                    value={locationZ}
-                                    setValue={setLocationZ}
-                                    isValid={isLocationZValid}
-                                />
+                                            <FormTextInput
+                                                label="Координаты: z:"
+                                                errorMessage="Значение поля 'Местоположение: z' должно быть представлено целым числом или отсутствовать вовсе!"
+                                                value={locationZ}
+                                                setValue={setLocationZ}
+                                                isValid={isLocationZValid}
+                                            />
 
-                                <FormTextInput
-                                    inputType="date"
-                                    label="День рождения:"
-                                    errorMessage="Значение поля 'День рождения' не может быть пустым!"
-                                    value={personBirthday}
-                                    setValue={setPersonBirthday}
-                                    isValid={isPersonBirthdayValid}
-                                />
+                                            <FormTextInput
+                                                inputType="date"
+                                                label="День рождения:"
+                                                errorMessage="Значение поля 'День рождения' не может быть пустым!"
+                                                value={personBirthday}
+                                                setValue={setPersonBirthday}
+                                                isValid={isPersonBirthdayValid}
+                                            />
 
-                                <FormTextInput
-                                    label="Рост:"
-                                    errorMessage="Значение поля 'Рост' должно быть больше нуля!"
-                                    value={personHeight}
-                                    setValue={setPersonHeight}
-                                    isValid={isPersonHeightValid}
-                                />
-                            </>
-                        )
-                    }
-                </div>
+                                            <FormTextInput
+                                                label="Рост:"
+                                                errorMessage="Значение поля 'Рост' должно быть больше нуля!"
+                                                value={personHeight}
+                                                setValue={setPersonHeight}
+                                                isValid={isPersonHeightValid}
+                                            />
+                                        </>
+                                    )
+                                }
+                            </div>
+                        </>
+                    ) : (<><p>&lt;скрыто&gt;</p></>)
+                }
+
 
                 {/*------------*/}
 
@@ -620,7 +695,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
                 <label>
                     <input type="checkbox" value={headExistence}
                            onChange={() => setHeadExistence((prev) => !prev)}/>
-                    Существует?
+                    Выбрать из существующих?
                 </label>
                 <br/><br/>
 
@@ -682,8 +757,8 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
 
                 {/*------------*/}
 
-                <button onClick={(e) => handleSubmit(e)}>CREATE
-                </button> {/* (disabled={!isValid}) TODO: валидация :( */}
+                <button onClick={(e) => handleSubmit(e)}>CREATE</button>
+                {/* (disabled={!isValid}) TODO: валидация :( */}
             </form>
         </div>
     )
