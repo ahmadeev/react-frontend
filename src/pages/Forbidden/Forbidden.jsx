@@ -1,6 +1,6 @@
 import {useEffect} from "react";
-import Navbar from "../components/Navbar/Navbar.jsx";
-import styles from "../page-styles/Forbidden.module.css";
+import Navbar from "../../components/Navbar/Navbar.jsx";
+import styles from "./Forbidden.module.css";
 
 function Forbidden({ pageTitle }) {
     useEffect(() => {

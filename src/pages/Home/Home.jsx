@@ -1,13 +1,13 @@
-import Navbar from "../components/Navbar/Navbar.jsx";
-import styles from "../page-styles/Home.module.css";
+import Navbar from "../../components/Navbar/Navbar.jsx";
+import styles from "./Home.module.css";
 import React, {useEffect, useState} from "react";
-import Modal from "../components/Modal/Modal.jsx";
-import {crudCreate, crudRead, crudUpdate, crudDelete, crudReadMany, crudDeleteMany} from "../utils/crud.js";
-import DragonTable from "../components/Table/DragonTable.jsx";
-import CreateDragon from "../components/CreateDragon/CreateDragon.jsx";
-import {useAuth} from "../components/utils/AuthProvider.jsx";
-import AdditionalFunctions from "../components/Other/AdditionalFunctions.jsx";
-import Alert from "../components/Alert/Alert.jsx";
+import Modal from "../../components/Modal/Modal.jsx";
+import {crudCreate, crudRead, crudUpdate, crudDelete, crudReadMany, crudDeleteMany} from "../../utils/crud.js";
+import DragonTable from "../../components/Table/DragonTable.jsx";
+import CreateDragon from "../../components/CreateDragon/CreateDragon.jsx";
+import {useAuth} from "../../components/utils/AuthProvider.jsx";
+import AdditionalFunctions from "../../components/Other/AdditionalFunctions.jsx";
+import Alert from "../../components/Alert/Alert.jsx";
 
 function Home({ pageTitle }) {
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";

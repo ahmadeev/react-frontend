@@ -2,14 +2,14 @@ import './App.css'
 
 import {HashRouter, Route, Routes} from "react-router-dom";
 
-import Home from "./pages/Home.jsx";
-import CountDownToNewYear from "./pages/CountDownToNewYear.jsx";
-import CountDownToVikasBirthday from "./pages/CountDownToVikasBirthday.jsx";
+import Home from "./pages/Home/Home.jsx";
 import ProtectedRoute from "./components/utils/ProtectedRoute.jsx";
-import Auth from "./pages/Auth.jsx";
+import Auth from "./pages/Auth/Auth.jsx";
 import {AuthProvider, useAuth} from "./components/utils/AuthProvider.jsx";
-import Admin from "./pages/Admin.jsx";
-import Forbidden from "./pages/Forbidden.jsx";
+import Admin from "./pages/Admin/Admin.jsx";
+import Forbidden from "./pages/Forbidden/Forbidden.jsx";
+// import CountDownToNewYear from "./pages/_Example/CountDownToNewYear/CountDownToNewYear.jsx";
+// import CountDownToVikasBirthday from "./pages/_Example/CountDownToVikasBirthday/CountDownToVikasBirthday.jsx";
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -27,12 +27,12 @@ function App() {
                               <Admin pageTitle="Панель управления" />
                           </ProtectedRoute>
                       } />
-                      <Route path="/ny" element={<CountDownToNewYear pageTitle="Счётчик дней до Нового года" />} />
-                      <Route path="/vbd" element={
-                          <ProtectedRoute isAuthenticated={isAuthenticated} requiredRoles={["USER"]}>
-                              <CountDownToVikasBirthday pageTitle="Счётчик дней до дня рождения Вики" />
-                          </ProtectedRoute>
-                      } />
+                      {/*<Route path="/ny" element={<CountDownToNewYear pageTitle="Счётчик дней до Нового года" />} />*/}
+                      {/*<Route path="/vbd" element={*/}
+                      {/*    <ProtectedRoute isAuthenticated={isAuthenticated} requiredRoles={["USER"]}>*/}
+                      {/*        <CountDownToVikasBirthday pageTitle="Счётчик дней до дня рождения Вики" />*/}
+                      {/*    </ProtectedRoute>*/}
+                      {/*} />*/}
                   </Routes>
               </HashRouter>
           </AuthProvider>

@@ -11,7 +11,17 @@ import {
     PersonDTO
 } from "../../utils/object.model.js";
 
-function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) {
+function CreateDragon({
+                          isToCreate=true,
+                          prototype=null,
+                          loadDataWrapper,
+                          loadDataWrapperWithoutReload,
+                          tableReloadParentState,
+                          setTableReloadParentState,
+                          setAlertMessageParentState,
+                          setAlertStatusParentState,
+                          setUpdateDragonModalActiveParentState
+}) {
 
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
 
@@ -22,7 +32,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
         alignItems: "center",
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         let formData = new DragonDTO(
@@ -70,11 +80,16 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
             dragonOwnerId
         )
 
+        let res;
         if (isToCreate) {
-            loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, formData]);
+            res = await loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, formData]);
         } else {
-            loadDataWrapper(crudUpdate, [`${BASE_URL}/dragon`, prototype.id, formData]);
+            res = await loadDataWrapper(crudUpdate, [`${BASE_URL}/dragon`, prototype.id, formData]);
         }
+        let rd = await res.json();
+        setUpdateDragonModalActiveParentState(false);
+        setAlertMessageParentState("Error occurred! Details: " + rd.details);
+        setAlertStatusParentState((prev) => !prev);
         console.log("Submitted data:", formData);
     };
 
@@ -383,7 +398,7 @@ function CreateDragon({ isToCreate=true, prototype=null, loadDataWrapper, loadDa
 
     return (
         <div className={styles.form_wrapper}>
-            <form onChange={() => setIsValid(isFormValid())}> {/* TODO: валидация :( */}
+            <form> {/* onChange={() => setIsValid(isFormValid())} TODO: валидация :( */}
                 <h2>Информация о драконе</h2>
                 <div className="form-section">
                     <FormTextInput

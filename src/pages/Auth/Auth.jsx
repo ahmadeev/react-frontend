@@ -1,10 +1,10 @@
-import Navbar from "../components/Navbar/Navbar.jsx";
+import Navbar from "../../components/Navbar/Navbar.jsx";
 import {useEffect, useState} from "react";
-import SignInForm from "../components/AuthForm/SignInForm.jsx";
-import SignUpForm from "../components/AuthForm/SignUpForm.jsx";
-import styles from "../page-styles/Auth.module.css";
+import SignInForm from "../../components/AuthForm/SignInForm.jsx";
+import SignUpForm from "../../components/AuthForm/SignUpForm.jsx";
+import styles from "./Auth.module.css";
 import {useLocation} from "react-router-dom";
-import Alert from "../components/Alert/Alert.jsx";
+import Alert from "../../components/Alert/Alert.jsx";
 
 function Auth({ pageTitle, isSignedUp }) {
     const [isSignedUpHook, setIsSignedUpHook] = useState(isSignedUp);

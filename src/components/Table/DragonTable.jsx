@@ -395,6 +395,7 @@ const DragonTable = ({
                     loadDataWrapperWithoutReload={loadDataWrapperWithoutReload}
                     tableReloadParentState={tableReloadParentState}
                     setTableReloadParentState={setTableReloadParentState}
+                    setUpdateDragonModalActiveParentState={setUpdateDragonModalActive}
                 />
             </Modal>
 
