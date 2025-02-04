@@ -101,17 +101,19 @@ function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                 </label><br/>
 
                 {
-                    responseError !== "" && <h5>{responseError}</h5>
+                    responseError !== "" && <p style={{color: "red"}}>{responseError}</p>
                 }
 
                 {
                     invalidUsernameError &&
-                    <h5>Имя пользователя должно содержать минимум 4 символа!<br/>
-                        Имя пользователя может содержать строчные и заглавные символы латинского алфавита и цифры.</h5>
+                    <p style={{color: "red"}}>
+                        Имя пользователя должно содержать минимум 4 символа!<br/>
+                        Имя пользователя может содержать строчные и заглавные символы латинского алфавита и цифры.
+                    </p>
                 }
 
                 {
-                    incorrectPasswordsError && <h5>Пароли не совпадают!</h5>
+                    incorrectPasswordsError && <p style={{color: "red"}}>Пароли не совпадают!</p>
                 }
 
                 <button disabled={(!submitButtonState)} onClick={() => {

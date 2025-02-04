@@ -65,11 +65,11 @@ function SignInForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                 </label><br/>
 
                 {
-                    invalidUsernameError && <h5>Неверное имя пользователя.</h5>
+                    invalidUsernameError && <p style={{color: "red"}}>Неверное имя пользователя.</p>
                 }
 
                 {
-                    responseError !== "" && <h5>{responseError}</h5>
+                    responseError !== "" && <p style={{color: "red"}}>{responseError}</p>
                 }
 
                 <button disabled={(!submitButtonState)} onClick={() => {
