@@ -245,14 +245,14 @@ const DragonTable = ({
                         <th rowSpan={3}>ID</th>
                         <th rowSpan={3}>Owner</th>
                         <th rowSpan={3}>Name</th>
-                        <th colSpan={3}>Coordinates</th>
-                        <th colSpan={2}>Cave</th>
-                        <th colSpan={10}>Killer</th>
+                        <th colSpan={4}>Coordinates</th>
+                        <th colSpan={3}>Cave</th>
+                        <th colSpan={12}>Killer</th>
                         <th rowSpan={3}>Age</th>
                         <th rowSpan={3}>Description</th>
                         <th rowSpan={3}>Wingspan</th>
                         <th rowSpan={3}>Character</th>
-                        <th colSpan={3}>Head</th>
+                        <th colSpan={4}>Head</th>
                         <th rowSpan={3}>Edit</th>
                         <th rowSpan={3}>Remove</th>
                     </tr>
@@ -260,27 +260,32 @@ const DragonTable = ({
                         <th rowSpan={2}>id</th>
                         <th rowSpan={2}>x</th>
                         <th rowSpan={2}>y</th>
+                        <th rowSpan={2}>owner id</th>
 
                         <th rowSpan={2}>id</th>
                         <th rowSpan={2}>number of treasures</th>
+                        <th rowSpan={2}>owner id</th>
 
                         <th rowSpan={2}>id</th>
                         <th rowSpan={2}>name</th>
                         <th rowSpan={2}>eye color</th>
                         <th rowSpan={2}>hair color</th>
-                        <th colSpan={4}>location</th>
+                        <th colSpan={5}>location</th>
                         <th rowSpan={2}>birthday</th>
                         <th rowSpan={2}>height</th>
+                        <th rowSpan={2}>owner id</th>
 
                         <th rowSpan={2}>id</th>
                         <th rowSpan={2}>eyes count</th>
                         <th rowSpan={2}>tooth count</th>
+                        <th rowSpan={2}>owner id</th>
                     </tr>
                     <tr>
                         <th>id</th>
                         <th>x</th>
                         <th>y</th>
                         <th>z</th>
+                        <th>owner id</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -303,8 +308,10 @@ const DragonTable = ({
                             <td>{item.coordinates.id}</td>
                             <td>{item.coordinates.x}</td>
                             <td>{item.coordinates.y}</td>
+                            <td>{item.coordinates.ownerId}</td>
                             <td>{item.cave.id}</td>
                             <td>{item.cave.numberOfTreasures}</td>
+                            <td>{item.cave.ownerId}</td>
                             <td>{item.killer?.id || "-"}</td>
                             <td>{item.killer?.name || "-"}</td>
                             <td>{item.killer?.eyeColor || "-"}</td>
@@ -313,8 +320,10 @@ const DragonTable = ({
                             <td>{item.killer?.location.x || "-"}</td>
                             <td>{item.killer?.location.y || "-"}</td>
                             <td>{item.killer?.location.z || "-"}</td>
+                            <td>{item.killer?.location.ownerId || "-"}</td>
                             <td>{item.killer?.birthday.join("-") || "-"}</td>
                             <td>{item.killer?.height || "-"}</td>
+                            <td>{item.killer?.ownerId || "-"}</td>
                             <td>{item.age}</td>
                             <td>{item.description}</td>
                             <td>{item.wingspan}</td>
@@ -322,6 +331,7 @@ const DragonTable = ({
                             <td>{item.head.id}</td>
                             <td>{item.head.eyesCount}</td>
                             <td>{item.head.toothCount}</td>
+                            <td>{item.head.ownerId}</td>
                             <td>
                                 <button onClick={() => {
                                     setCurrentItem(item);
