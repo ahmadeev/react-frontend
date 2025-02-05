@@ -20,6 +20,12 @@ function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isAdmin, setIsAdmin] = useState(false);
 
+    // для улучшения пользовательского опыта (надо продумать как связать с FormTextInput)
+    // TODO: кстати, валидацию можно осуществлять так же в onBlur (относится и к SignInForm)
+    const [isUsernameTouched, setIsUsernameTouched] = useState(false);
+    const [isPasswordTouched, setIsPasswordTouched] = useState(false);
+    const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] = useState(false);
+
     useEffect(() => {
         const isUsernameValid = checkIsValidUsername(username);
         const isPasswordValid = comparePasswords(password, confirmPassword);
@@ -68,7 +74,12 @@ function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                     Введите имя пользователя:<br/>
                     <input
                         value={username}
-                        onChange={handleUsernameChange}
+                        onChange={(e) => {
+                            handleUsernameChange(e);
+                        }}
+                        onBlur={() => {
+                            setIsUsernameTouched(true);
+                        }}
                         className="login-input"
                         type="text"
                     />
@@ -85,7 +96,12 @@ function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                     Введите пароль:<br/>
                     <input
                         value={password}
-                        onChange={handlePasswordChange}
+                        onChange={(e) => {
+                            handlePasswordChange(e);
+                        }}
+                        onBlur={() => {
+                            setIsPasswordTouched(true);
+                        }}
                         className="password-input"
                         type="password"
                     />
@@ -94,7 +110,12 @@ function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                     Повторите пароль:<br/>
                     <input
                         value={confirmPassword}
-                        onChange={handleConfirmPasswordChange}
+                        onChange={(e) => {
+                            handleConfirmPasswordChange(e);
+                        }}
+                        onBlur={() => {
+                            setIsConfirmPasswordTouched(true);
+                        }}
                         className="password-input"
                         type="password"
                     />
@@ -105,7 +126,7 @@ function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                 }
 
                 {
-                    invalidUsernameError &&
+                    (isUsernameTouched && invalidUsernameError) &&
                     <p style={{color: "red"}}>
                         Имя пользователя должно содержать минимум 4 символа!<br/>
                         Имя пользователя может содержать строчные и заглавные символы латинского алфавита и цифры.
@@ -113,7 +134,8 @@ function SignUpForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                 }
 
                 {
-                    incorrectPasswordsError && <p style={{color: "red"}}>Пароли не совпадают!</p>
+                    (isPasswordTouched && isConfirmPasswordTouched && incorrectPasswordsError)
+                        && <p style={{color: "red"}}>Пароли не совпадают!</p>
                 }
 
                 <button disabled={(!submitButtonState)} onClick={() => {

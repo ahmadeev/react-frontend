@@ -4,7 +4,7 @@ function Snow() {
 
     return (
         <>
-            {/*{https://yraaa.ru/scripts/snow-css3}*/}
+            {/* https://yraaa.ru/scripts/snow-css3 */}
             <div className={styles.snowContainer}>
                 <div className={styles.snow}></div>
             </div>

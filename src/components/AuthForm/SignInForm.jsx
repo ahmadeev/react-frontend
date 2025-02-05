@@ -17,6 +17,9 @@ function SignInForm({ from, setIsSignedUpParentState, setAlertMessageParentState
     // ошибки, пришедшие в ответе с сервера
     const [responseError, setResponseError] = useState("");
 
+    // для улучшения пользовательского опыта (надо продумать как связать с FormTextInput)
+    const [isUsernameTouched, setIsUsernameTouched] = useState(false);
+
     useEffect(() => {
         const isUsernameValid = checkIsValidUsername(username);
 
@@ -49,7 +52,12 @@ function SignInForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                     Введите имя пользователя:<br/>
                     <input
                         value={username}
-                        onChange={handleUsernameChange}
+                        onChange={(e) => {
+                            handleUsernameChange(e);
+                        }}
+                        onBlur={() => {
+                            setIsUsernameTouched(true);
+                        }}
                         className="login-input"
                         type="text"
                     />
@@ -65,7 +73,7 @@ function SignInForm({ from, setIsSignedUpParentState, setAlertMessageParentState
                 </label><br/>
 
                 {
-                    invalidUsernameError && <p style={{color: "red"}}>Неверное имя пользователя.</p>
+                    (isUsernameTouched && invalidUsernameError) && <p style={{color: "red"}}>Неверное имя пользователя.</p>
                 }
 
                 {
