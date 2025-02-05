@@ -89,7 +89,7 @@ export function fun1(url, head) {
             "Content-Type": "application/json",
             'Authorization': `Bearer ${sessionStorage.getItem('session-token')}`,
         },
-        body: JSON.stringify({head}),
+        body: JSON.stringify(head),
     })
 }
 
