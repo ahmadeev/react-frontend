@@ -16,7 +16,7 @@ function Home({ pageTitle }) {
 
     // надо проверять CreateDragon, DragonTable, Admin, Home, AdminTable
 
-    const { logout } = useAuth();
+    const { logout, isAuthenticated } = useAuth();
 
     const [createDragonModalActive, setCreateDragonModalActive] = useState(false);
     const [additionalFunctionsModalActive, setAdditionalFunctionsModalActive] = useState(false);
@@ -104,6 +104,17 @@ function Home({ pageTitle }) {
             console.error("Error proccessing CRUD:", error);
             return null;
         }
+    }
+
+    if (!isAuthenticated) {
+        return (
+            <>
+                <Navbar/>
+                <div className={styles.wrapper}>
+                    <h2>Сначала войдите в аккаунт!</h2>
+                </div>
+            </>
+        )
     }
 
     return (
