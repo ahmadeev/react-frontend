@@ -97,10 +97,10 @@ const DragonTable = ({
     }, [fetchData, readManyUrl, page, size, tableReloadParentState]); // пустой -- один раз. data не добавляем, иначе луп
 
     // Пример создания экземпляра
-    const coordinates = new CoordinatesDTO(-1, 50, 30, -1, true);
-    const cave = new DragonCaveDTO(-1, 15,-1, true);
-    const killer = new PersonDTO(-1, "killer", "WHITE", "WHITE", new LocationDTO(-1, 1, 1, 1,-1, true), new Date().toISOString().split('T')[0], 200, -1, true);
-    const head = new DragonHeadDTO(-1, 200, 100500, -1, true);
+    const coordinates = new CoordinatesDTO(-1, 50, 30, -1, -1, true);
+    const cave = new DragonCaveDTO(-1, 15,-1, -1, true);
+    const killer = new PersonDTO(-1, "killer", "WHITE", "WHITE", new LocationDTO(-1, 1, 1, 1,-1, -1, true), new Date().toISOString().split('T')[0], 200, -1, -1, true);
+    const head = new DragonHeadDTO(-1, 200, 100500, -1, -1, true);
 
     const dragon1 = new DragonDTO(
         -1,
@@ -113,6 +113,7 @@ const DragonTable = ({
         150,  // Wingspan
         null, // No character
         head, // Dragon head
+        -1,
         -1,
         true
     );
@@ -128,6 +129,7 @@ const DragonTable = ({
         1000,  // Wingspan
         "CUNNING", // No character
         head, // Dragon head
+        -1,
         -1,
         false
     );

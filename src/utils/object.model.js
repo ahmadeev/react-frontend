@@ -1,24 +1,26 @@
 export class CoordinatesDTO {
-    constructor(id=-1, x, y, ownerId=-1, allowEditing=false) {
+    constructor(id=-1, x, y, ownerId=-1, updatedBy=-1, allowEditing=false) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.ownerId = ownerId;
+        this.updatedBy = updatedBy;
         this.allowEditing = allowEditing;
     }
 }
 
 export class DragonCaveDTO {
-    constructor(id=-1, numberOfTreasures, ownerId=-1, allowEditing=false) {
+    constructor(id=-1, numberOfTreasures, ownerId=-1, updatedBy=-1, allowEditing=false) {
         this.id = id;
         this.numberOfTreasures = numberOfTreasures;
         this.ownerId = ownerId;
+        this.updatedBy = updatedBy;
         this.allowEditing = allowEditing;
     }
 }
 
 export class PersonDTO {
-    constructor(id=-1, name, eyeColor, hairColor, location, birthday, height, ownerId=-1, allowEditing=false) {
+    constructor(id=-1, name, eyeColor, hairColor, location, birthday, height, ownerId=-1, updatedBy=-1, allowEditing=false) {
         this.id = id;
         this.name = name;
         this.eyeColor = eyeColor;
@@ -27,27 +29,30 @@ export class PersonDTO {
         this.birthday = birthday;
         this.height = height;
         this.ownerId = ownerId;
+        this.updatedBy = updatedBy;
         this.allowEditing = allowEditing;
     }
 }
 
 export class LocationDTO {
-    constructor(id=-1, x, y, z, ownerId=-1, allowEditing=false) {
+    constructor(id=-1, x, y, z, ownerId=-1, updatedBy=-1, allowEditing=false) {
         this.id = id;
         this.x = x;
         this.y = y;
         this.z = z;
         this.ownerId = ownerId;
+        this.updatedBy = updatedBy;
         this.allowEditing = allowEditing;
     }
 }
 
 export class DragonHeadDTO {
-    constructor(id=-1, eyesCount, toothCount, ownerId=-1, allowEditing=false) {
+    constructor(id=-1, eyesCount, toothCount, ownerId=-1, updatedBy=-1, allowEditing=false) {
         this.id = id;
         this.eyesCount = eyesCount;
         this.toothCount = toothCount;
         this.ownerId = ownerId;
+        this.updatedBy = updatedBy;
         this.allowEditing = allowEditing;
     }
 }
@@ -65,6 +70,7 @@ export class DragonDTO {
         character = null,
         head = null,
         ownerId=-1,
+        updatedBy=-1,
         allowEditing=false
     ) {
         // проверка на обязательные поля и их валидность
@@ -96,6 +102,7 @@ export class DragonDTO {
         this.character = character;
         this.head = head;
         this.ownerId = ownerId;
+        this.updatedBy = updatedBy;
         this.allowEditing = allowEditing;
     }
 }

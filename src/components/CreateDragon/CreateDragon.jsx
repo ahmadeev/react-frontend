@@ -44,12 +44,14 @@ function CreateDragon({
                 coordinatesX,
                 coordinatesY,
                 coordinatesOwnerId,
+                coordinatesUpdatedBy,
                 coordinatesEditingAllowed
             ),
             new DragonCaveDTO(
                 dragonCaveId,
                 dragonCaveNumberOfTreasures,
                 dragonCaveOwnerId,
+                caveUpdatedBy,
                 caveEditingAllowed
             ),
             dragonKillerInputNotNull ? (
@@ -64,11 +66,13 @@ function CreateDragon({
                         locationY,
                         locationZ,
                         locationOwnerId,
-                        false // TODO: бубубу
+                        locationUpdatedBy,
+                        false // TODO: бубубу, выше тоже бубубу
                     ),
                     personBirthday,
                     personHeight,
                     personOwnerId,
+                    personUpdatedBy,
                     personEditingAllowed
                 )
             ) : null,
@@ -81,9 +85,11 @@ function CreateDragon({
                 dragonHeadEyesCount,
                 dragonHeadToothCount,
                 dragonHeadOwnerId,
+                headUpdatedBy,
                 headEditingAllowed
             ),
             dragonOwnerId,
+            updatedBy,
             editingAllowed
         )
 
@@ -189,6 +195,7 @@ function CreateDragon({
             setDragonHeadOwnerId(prototype.head.ownerId || "");
             // ---
             setDragonOwnerId(prototype.ownerId || "");
+            setUpdatedBy(prototype.updatedBy || "");
         }
 
     }, [prototype]);
@@ -273,6 +280,11 @@ function CreateDragon({
         return ("" + coordinatesOwnerId).match(regexInt) && coordinatesOwnerId >= 0;
     }
 
+    const [coordinatesUpdatedBy, setCoordinatesUpdatedBy] = useState("");
+    const isCoordinatesUpdatedByValid = () => {
+        return ("" + coordinatesUpdatedBy).match(regexInt) && coordinatesUpdatedBy >= 0;
+    }
+
     const [dragonCaveId, setDragonCaveId] = useState("");
     const isDragonCaveIdValid = () => {
         return ("" + dragonCaveId).match(regexInt) && dragonCaveId >= 0;
@@ -286,6 +298,11 @@ function CreateDragon({
     const [dragonCaveOwnerId, setDragonCaveOwnerId] = useState("");
     const isDragonCaveOwnerIdValid = () => {
         return ("" + dragonCaveOwnerId).match(regexInt) && dragonCaveOwnerId >= 0;
+    }
+
+    const [caveUpdatedBy, setCaveUpdatedBy] = useState("");
+    const isCaveUpdatedByValid = () => {
+        return ("" + caveUpdatedBy).match(regexInt) && caveUpdatedBy >= 0;
     }
 
     const [personId, setPersonId] = useState("");
@@ -333,6 +350,11 @@ function CreateDragon({
         return ("" + locationOwnerId).match(regexInt) && locationOwnerId >= 0;
     }
 
+    const [locationUpdatedBy, setLocationUpdatedBy] = useState("");
+    const isLocationUpdatedByValid = () => {
+        return ("" + locationUpdatedBy).match(regexInt) && locationUpdatedBy >= 0;
+    }
+
     const [personBirthday, setPersonBirthday] = useState("");
     const isPersonBirthdayValid = () => {
         return personBirthday !== null && personBirthday !== "";
@@ -346,6 +368,11 @@ function CreateDragon({
     const [personOwnerId, setPersonOwnerId] = useState("");
     const isPersonOwnerIdValid = () => {
         return ("" + personOwnerId).match(regexInt) && personOwnerId >= 0;
+    }
+
+    const [personUpdatedBy, setPersonUpdatedBy] = useState("");
+    const isPersonUpdatedByValid = () => {
+        return ("" + personUpdatedBy).match(regexInt) && personUpdatedBy >= 0;
     }
 
     const [dragonAge, setDragonAge] = useState("");
@@ -388,9 +415,19 @@ function CreateDragon({
         return ("" + dragonHeadOwnerId).match(regexInt) && dragonHeadOwnerId >= 0;
     }
 
+    const [headUpdatedBy, setHeadUpdatedBy] = useState("");
+    const isHeadUpdatedByValid = () => {
+        return ("" + headUpdatedBy).match(regexInt) && headUpdatedBy >= 0;
+    }
+
     const [dragonOwnerId, setDragonOwnerId] = useState("");
     const isDragonOwnerIdValid = () => {
         return ("" + dragonOwnerId).match(regexInt) && dragonOwnerId >= 0;
+    }
+
+    const [updatedBy, setUpdatedBy] = useState("");
+    const isUpdatedByValid = () => {
+        return ("" + updatedBy).match(regexInt) && updatedBy >= 0;
     }
 
     const isFormValid = () => {
