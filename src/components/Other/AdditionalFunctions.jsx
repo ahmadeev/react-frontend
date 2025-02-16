@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {crudCreate, crudReadMany, crudUpdate, fun1, fun2, fun3, fun4, fun5} from "../../utils/crud.js";
 
-function AdditionalFunctions({ loadDataWrapperWithoutReload }) {
+function AdditionalFunctions({ loadDataWrapperWithoutReload, loadDataWrapper }) {
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
 
     const [headInput, setHeadInput] = useState("");
@@ -62,9 +62,9 @@ function AdditionalFunctions({ loadDataWrapperWithoutReload }) {
                 </select>
                 <button onClick={async () => {
                     event.preventDefault();
-                    let res = await loadDataWrapperWithoutReload(fun1, [`${BASE_URL}/fun-1`, headInput]);
-                    let rd = await res.json();
-                    console.log(rd);
+                    let res = await loadDataWrapper(fun1, [`${BASE_URL}/fun-1`, headInput]);
+                    let rd = res.details;
+                    setHeadResponse(rd);
                 }}>
                     ОТПРАВИТЬ
                 </button>
@@ -82,8 +82,8 @@ function AdditionalFunctions({ loadDataWrapperWithoutReload }) {
                 <button onClick={async () => {
                     event.preventDefault();
                     let res = await loadDataWrapperWithoutReload(fun2, [`${BASE_URL}/fun-2`, wingspanInput]);
-                    let rd = await res.json();
-                    console.log(rd);
+                    let rd = res.details;
+                    setWingspanResponse(rd);
                 }}>
                     ОТПРАВИТЬ
                 </button>
@@ -105,8 +105,8 @@ function AdditionalFunctions({ loadDataWrapperWithoutReload }) {
                 <button onClick={async () => {
                     event.preventDefault();
                     let res = await loadDataWrapperWithoutReload(fun3, [`${BASE_URL}/fun-3`, characterInput]);
-                    let rd = await res.json();
-                    console.log(rd);
+                    let rd = res.data;
+                    setCharacterResponse(rd);
                 }}>
                     ОТПРАВИТЬ
                 </button>
@@ -118,8 +118,8 @@ function AdditionalFunctions({ loadDataWrapperWithoutReload }) {
                 <button onClick={async () => {
                     event.preventDefault();
                     let res = await loadDataWrapperWithoutReload(fun4, [`${BASE_URL}/fun-4`]);
-                    let rd = await res.json();
-                    console.log(rd);
+                    let rd = res.data;
+                    setDeepestDragonCaveResponse(JSON.stringify(rd));
                 }}>
                     ОТПРАВИТЬ
                 </button>
@@ -150,9 +150,9 @@ function AdditionalFunctions({ loadDataWrapperWithoutReload }) {
                 </select>
                 <button onClick={async () => {
                     event.preventDefault();
-                    let res = await loadDataWrapperWithoutReload(fun5, [`${BASE_URL}/fun-5`, aliveDragonInput.id, aliveDragonInput]);
-                    let rd = await res.json();
-                    console.log(rd);
+                    let res = await loadDataWrapper(fun5, [`${BASE_URL}/fun-5`, aliveDragonInput.id, aliveDragonInput]);
+                    let rd = res.details;
+                    setAliveDragonResponse(rd);
                 }}>
                     ОТПРАВИТЬ
                 </button>

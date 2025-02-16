@@ -145,6 +145,7 @@ function Home({ pageTitle }) {
 
             <Modal active={additionalFunctionsModalActive} setActive={setAdditionalFunctionsModalActive}>
                 <AdditionalFunctions
+                    loadDataWrapper={loadDataWrapper}
                     loadDataWrapperWithoutReload={loadDataWrapperWithoutReload}
                 />
             </Modal>
