@@ -97,10 +97,10 @@ const DragonTable = ({
     }, [fetchData, readManyUrl, page, size, tableReloadParentState]); // пустой -- один раз. data не добавляем, иначе луп
 
     // Пример создания экземпляра
-    const coordinates = new CoordinatesDTO(-1, 50, 30);
-    const cave = new DragonCaveDTO(-1, 15);
-    const killer = new PersonDTO(-1, "killer", "WHITE", "WHITE", new LocationDTO(-1, 1, 1, 1), new Date().toISOString().split('T')[0], 200);
-    const head = new DragonHeadDTO(-1, 200, 100500);
+    const coordinates = new CoordinatesDTO(-1, 50, 30, -1, true);
+    const cave = new DragonCaveDTO(-1, 15,-1, true);
+    const killer = new PersonDTO(-1, "killer", "WHITE", "WHITE", new LocationDTO(-1, 1, 1, 1,-1, true), new Date().toISOString().split('T')[0], 200, -1, true);
+    const head = new DragonHeadDTO(-1, 200, 100500, -1, true);
 
     const dragon1 = new DragonDTO(
         -1,
@@ -113,6 +113,8 @@ const DragonTable = ({
         150,  // Wingspan
         null, // No character
         head, // Dragon head
+        -1,
+        true
     );
 
     const dragon2 = new DragonDTO(
@@ -126,6 +128,8 @@ const DragonTable = ({
         1000,  // Wingspan
         "CUNNING", // No character
         head, // Dragon head
+        -1,
+        false
     );
 
     const columns = [
@@ -182,6 +186,7 @@ const DragonTable = ({
     return (
         <>
             <button onClick={() => {
+                console.log("MEOW: ", dragon1, dragon2)
                 loadDataWrapper(crudCreate, [`${BASE_URL}/dragon`, Math.random() < 0.5 ? dragon1 : dragon2]);
             }}>БЫСТРОЕ СОЗДАНИЕ (ОДИН ДРАКОН)
             </button>
@@ -300,7 +305,7 @@ const DragonTable = ({
                     )}
                     {!isLoading && (!data || !data.length) && (
                         <tr>
-                            <td colSpan="21">Данные отсутствуют</td>
+                            <td colSpan="32">Данные отсутствуют</td>
                         </tr>
                     )}
                     {data && data.map(item => (

@@ -43,12 +43,14 @@ function CreateDragon({
                 coordinatesId,
                 coordinatesX,
                 coordinatesY,
-                coordinatesOwnerId
+                coordinatesOwnerId,
+                coordinatesEditingAllowed
             ),
             new DragonCaveDTO(
                 dragonCaveId,
                 dragonCaveNumberOfTreasures,
-                dragonCaveOwnerId
+                dragonCaveOwnerId,
+                caveEditingAllowed
             ),
             dragonKillerInputNotNull ? (
                 new PersonDTO(
@@ -61,11 +63,13 @@ function CreateDragon({
                         locationX,
                         locationY,
                         locationZ,
-                        locationOwnerId
+                        locationOwnerId,
+                        false // TODO: бубубу
                     ),
                     personBirthday,
                     personHeight,
-                    personOwnerId
+                    personOwnerId,
+                    personEditingAllowed
                 )
             ) : null,
             dragonAge,
@@ -76,9 +80,11 @@ function CreateDragon({
                 dragonHeadId,
                 dragonHeadEyesCount,
                 dragonHeadToothCount,
-                dragonHeadOwnerId
+                dragonHeadOwnerId,
+                headEditingAllowed
             ),
-            dragonOwnerId
+            dragonOwnerId,
+            editingAllowed
         )
 
         let res;
@@ -101,10 +107,16 @@ function CreateDragon({
     const [coordinatesExistence, setCoordinatesExistence] = useState(false);
     const [caveExistence, setCaveExistence] = useState(false);
     const [killerExistence, setKillerExistence] = useState(false);
+    // const [locationExistence, setLocationExistence] = useState(false);
     const [headExistence, setHeadExistence] = useState(false);
 
     // галочка для разрешения редактирования и удаления админами
     const [editingAllowed, setEditingAllowed] = useState(false);
+    const [coordinatesEditingAllowed, setCoordinatesEditingAllowed] = useState(false);
+    const [caveEditingAllowed, setCaveEditingAllowed] = useState(false);
+    const [personEditingAllowed, setPersonEditingAllowed] = useState(false);
+    // const [locationEditingAllowed, setLocationEditingAllowed] = useState(false);
+    const [headEditingAllowed, setHeadEditingAllowed] = useState(false);
 
     // рудимент
     const [killerEyeColorTouched, setKillerEyeColorTouched] = useState(false);
@@ -136,16 +148,17 @@ function CreateDragon({
     }, [prototype]);
 
     useEffect(() => {
-        // console.log(prototype);
+        console.log(prototype);
 
         if (prototype !== null) {
-            setDragonId(prototype.id || "");
+            setDragonId(prototype.id || -1);
             setDragonName(prototype.name || "");
             // ---
             setCoordinatesId(prototype.coordinates.id || "");
             setCoordinatesX(prototype.coordinates.x || "");
             setCoordinatesY(prototype.coordinates.y || "");
-            setCoordinatesOwnerId(prototype.coordinates.ownerId || "")
+            setCoordinatesOwnerId(prototype.coordinates.ownerId || "");
+            setCoordinatesEditingAllowed(prototype.coordinates.ownerId || false);
             // ---
             setDragonCaveId(prototype.cave.id || "");
             setDragonCaveNumberOfTreasures(prototype.cave.numberOfTreasures || "");
@@ -441,7 +454,8 @@ function CreateDragon({
                                             {option}
                                         </option>
                                     ))}
-                                    {(!coordinates || coordinates.length === 0) && <option value="" disabled>&lt;пусто&gt;</option>}
+                                    {(!coordinates || coordinates.length === 0) &&
+                                        <option value="" disabled>&lt;пусто&gt;</option>}
                                 </select>
                             </>
                         ) : (
@@ -460,6 +474,12 @@ function CreateDragon({
                                     setValue={setCoordinatesY}
                                     isValid={isCoordinatesYValid}
                                 />
+                                <br/>
+                                <label>
+                                    <input type="checkbox" value={coordinatesEditingAllowed}
+                                           onClick={() => setCoordinatesEditingAllowed((prev) => (!prev))}/>
+                                    Разрешить редактирование и удаление Администраторами?
+                                </label>
                             </>
                         )
                     }
@@ -507,6 +527,12 @@ function CreateDragon({
                                     setValue={setDragonCaveNumberOfTreasures}
                                     isValid={isDragonCaveNumberOfTreasuresValid}
                                 />
+                                <br/>
+                                <label>
+                                    <input type="checkbox" value={caveEditingAllowed}
+                                           onClick={() => setCaveEditingAllowed((prev) => (!prev))}/>
+                                    Разрешить редактирование и удаление Администраторами?
+                                </label>
                             </>
                         )
                     }
@@ -653,6 +679,14 @@ function CreateDragon({
                                                 setValue={setPersonHeight}
                                                 isValid={isPersonHeightValid}
                                             />
+
+                                            <br/>
+
+                                            <label>
+                                                <input type="checkbox" value={personEditingAllowed}
+                                                       onClick={() => setPersonEditingAllowed((prev) => (!prev))}/>
+                                                Разрешить редактирование и удаление Администраторами?
+                                            </label>
                                         </>
                                     )
                                 }
@@ -754,6 +788,12 @@ function CreateDragon({
                                     setValue={setDragonHeadToothCount}
                                     isValid={isDragonHeadToothCountValid}
                                 />
+                                <br/>
+                                <label>
+                                    <input type="checkbox" value={headEditingAllowed}
+                                           onClick={() => setHeadEditingAllowed((prev) => (!prev))}/>
+                                    Разрешить редактирование и удаление Администраторами?
+                                </label>
                             </>
                         )
                     }
