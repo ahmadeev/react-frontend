@@ -24,4 +24,4 @@ jobs:
           publish_dir: ./dist  # Директория сборки, которую нужно деплоить
           destination_branch: gh-pages  # Ветка для деплоя
           publish_branch: gh-pages  # Установка целевой ветки
-          force_orphan: true  # Создание ветки с пустой историей
+          force_orphan: true  # Создание ветки с пустой историей 
