@@ -7,6 +7,8 @@ import {crudReadMany} from "../../utils/crud.js";
 import {useAuth} from "../../components/utils/AuthProvider.jsx";
 
 function Admin({ pageTitle }) {
+    // const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/admin";
+
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/admin";
 
     const { logout } = useAuth();

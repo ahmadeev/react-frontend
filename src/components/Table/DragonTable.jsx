@@ -24,6 +24,9 @@ const DragonTable = ({
                          setAlertMessageParentState,
                          setAlertStatusParentState
 }) => {
+    // const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
+    // const WS_URL = "ws://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/ws/dragons";
+
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
     const WS_URL = "ws://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/ws/dragons";
 

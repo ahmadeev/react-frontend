@@ -4,6 +4,9 @@ import {useAuth} from "../utils/AuthProvider.jsx";
 import styles from "./Table.module.css";
 
 const AdminTable = ({ fetchData, readManyUrl, deleteOneUrl, loadDataWrapper, loadDataWrapperWithoutReload, tableReloadParentState, setTableReloadParentState }) => {
+    // const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/admin";
+    // const WS_URL = "ws://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/ws/users";
+
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/admin";
     const WS_URL = "ws://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/ws/users";
 

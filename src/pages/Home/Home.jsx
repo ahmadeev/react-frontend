@@ -10,7 +10,11 @@ import AdditionalFunctions from "../../components/Other/AdditionalFunctions.jsx"
 import Alert from "../../components/Alert/Alert.jsx";
 
 function Home({ pageTitle }) {
+    // const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
+
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
+
+    // надо проверять CreateDragon, DragonTable, Admin, Home, AdminTable
 
     const { logout } = useAuth();
 

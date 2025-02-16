@@ -23,6 +23,7 @@ function CreateDragon({
                           setUpdateDragonModalActiveParentState
 }) {
 
+    // const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
     const BASE_URL = "http://localhost:8080/backend-jakarta-ee-1.0-SNAPSHOT/api/user";
 
     const FORM_SECTION_STYLE = {
